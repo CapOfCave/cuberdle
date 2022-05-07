@@ -1,7 +1,10 @@
 import './cube.scss'
 
-var colors = ['blue', 'green', 'white', 'yellow', 'orange', 'red'],
-    pieces = document.getElementsByClassName('piece');
+// this code was written by a wizard
+// I am trying to make sense of it
+
+const colors = ['blue', 'green', 'white', 'yellow', 'orange', 'red'];
+const pieces = document.getElementsByClassName('piece');
 
 // Returns j-th adjacent face of i-th face
 function mx(i, j) {
@@ -74,16 +77,25 @@ function mousedown(md_e) {
     const face = [].indexOf.call((element || cube).parentNode.children, element);
     function mousemove(mm_e) {
         if (element) {
-            var gid = /\d/.exec(document.elementFromPoint(mm_e.pageX, mm_e.pageY).id);
-            if (gid && gid.input.includes('anchor')) {
+            // move
+            const selectedAnchor = document.elementFromPoint(mm_e.pageX, mm_e.pageY)
+            var gid = selectedAnchor.dataset.anchorIndex;
+            // selectedAnchor will be the anchor element as soon as the current sticker is left
+            // gid being 0 is not a problem - it's still truthy because it's a string ("0")
+            if (gid && selectedAnchor.classList.contains('anchor')) {
                 mouseup();
                 var e = element.parentNode.children[mx(face, Number(gid) + 3)].hasChildNodes();
                 animateRotation(mx(face, Number(gid) + 1 + 2 * e), e, Date.now());
             }
-        } else pivot.style.transform =
-            'rotateX(' + (startXY[0] - (mm_e.pageY - md_e.pageY) / 2) + 'deg)' +
-            'rotateY(' + (startXY[1] + (mm_e.pageX - md_e.pageX) / 2) + 'deg)';
+        } else {
+            // no face selected => cube rotation
+            pivot.style.transform = 'rotateX(' + (startXY[0] - (mm_e.pageY - md_e.pageY) / 2) + 'deg)' +
+                'rotateY(' + (startXY[1] + (mm_e.pageX - md_e.pageX) / 2) + 'deg)';
+        }
     }
+    /**
+     * Cleanup drag listeners and add the guide back to the top level element
+     */
     function mouseup() {
         preview.appendChild(guide);
         scene.removeEventListener('mousemove', mousemove);
