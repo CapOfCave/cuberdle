@@ -7,30 +7,15 @@ $cube-scale: 1.9;
 $faces: (left: (0, -90, 180), right: (0, 90, 90), back: (0, 180, -90), front: (0, 0, 0), bottom: (-90, 0, -90), top: (90, 0, 180));
 $colors: (blue: #001ca8, green: #006E16, white: #DDD, yellow: #E0AE00, orange: #FF5000, red: #DF0500);
 
-html, body {
-	height: 100%;
-	overflow: hidden;
-	background: radial-gradient(circle, white, rgba(black, .5)) {
-		color: $ground-color;
-		blend-mode: overlay; }
-}
-
-.credits {
-	width: 100%;
-	top: 90%;
-}
-
-.text {
-	text-align: center;
-	font: { family: Helvetica; size: .8rem; }
-	color: grey;
-	pointer-events: none;
-}
-
 .centered {
 	position: absolute;
 	top: 0; bottom: 0; left: 0; right: 0;
 	margin: auto;
+}
+
+.preview {
+	height: 100vh;
+	width: 100vw;
 }
 
 .scene {
@@ -51,11 +36,6 @@ html, body {
 		position: absolute;
 		transform-style: inherit;
 	}
-}
-
-#piece4 > .element.top > .sticker {
-	background-image: URL('http://i63.tinypic.com/25hh1xu.png');
-	background-size: cover;
 }
 
 .cube {
