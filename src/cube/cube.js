@@ -6,7 +6,21 @@ import './cube.scss'
 const colors = ['blue', 'green', 'white', 'yellow', 'orange', 'red'];
 const pieces = document.getElementsByClassName('piece');
 
+/*
+    FACE INDEX MAPPING
+    0: left
+    1: right
+    2: top
+    3: bottom
+    4: back
+    5: front
+
+    note that the default view shows orange, which is on the backside
+*/
+
 // Returns j-th adjacent face of i-th face
+// i is a face
+// j is a distance
 function mx(i, j) {
     return ([2, 4, 3, 5][j % 4 | 0] + i % 2 * ((j | 0) % 4 * 2 + 3) + 2 * (i / 2 | 0)) % 6;
 }
@@ -74,18 +88,27 @@ function animateRotation(face, cw, currentTime) {
 function mousedown(md_e) {
     const startXY = pivot.style.transform.match(/-?\d+\.?\d*/g).map(Number);
     const face = md_e.target.closest('.face');
-    const faceIndex = [].indexOf.call((face || cube).parentNode.children, face);
     function mousemove(mm_e) {
         if (face) {
+            const piece = face.parentNode;
+            const faceIndex = Array.prototype.indexOf.call(piece.children, face);
+            console.log(faceIndex)
+
             // move
             const selectedAnchor = document.elementFromPoint(mm_e.pageX, mm_e.pageY)
-            var gid = selectedAnchor.dataset.anchorIndex;
-            // selectedAnchor will be the anchor element as soon as the current sticker is left
+            // the anchorIndex maps to the turnDirection (but the mapping has not been discovered yet)
+            var anchorIndex = selectedAnchor.dataset.anchorIndex;
+            // selectedAnchor will be the anchor element upon leaving the current sticker
             // gid being 0 is not a problem - it's still truthy because it's a string ("0")
-            if (gid && selectedAnchor.classList.contains('anchor')) {
+            if (anchorIndex && selectedAnchor.classList.contains('anchor')) {
                 mouseup();
-                var e = face.parentNode.children[mx(faceIndex, Number(gid) + 3)].hasChildNodes();
-                animateRotation(mx(faceIndex, Number(gid) + 1 + 2 * e), e, Date.now());
+
+                // piece.children is a HTMLCollection, not an array, so it's missing some useful methods - we borrow those of Array
+                // faceIncex according the FACE INDEX MAPPING described above
+                const faceIndex = Array.prototype.indexOf.call(piece.children, face);
+
+                var e = piece.children[mx(faceIndex, Number(anchorIndex) + 3)].hasChildNodes();
+                animateRotation(mx(faceIndex, Number(anchorIndex) + 1 + 2 * e), e, Date.now());
             }
         } else {
             // no face selected => cube rotation
