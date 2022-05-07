@@ -3,16 +3,31 @@ html(lang="en")
     head
         title Cuberdle 
     body
-        .preview
-            - var faces = ['left', 'right', 'top', 'bottom', 'back', 'front'], pieces = 26
-            #scene.scene
-                #pivot.pivot.centered(style = 'transform: rotateX(-35deg) rotateY(-135deg);')
-                    #cube.cube
-                        while pieces--
-                            .piece
-                                each face in faces
-                                    div(class = 'element ' + face)
-            #guide
-                - var n = 4
-                while n--
-                    div(id = 'anchor' + n class = 'anchor' style = 'transform: translateZ(3px) translateY(-33.33%) rotate(' + (-90 * n) + 'deg) translateY(66.67%)')
+        .container
+            h1 Cuberdle
+            #preview.preview
+                - var faces = ['left', 'right', 'top', 'bottom', 'back', 'front'], pieces = 26
+                #scene.scene
+                    #pivot.pivot.centered(style = 'transform: rotateX(-35deg) rotateY(-135deg);')
+                        #cube.cube
+                            while pieces--
+                                .piece
+                                    each face in faces
+                                        div(class = 'element ' + face)
+                #guide
+                    - var n = 4
+                    while n--
+                        div(id = 'anchor' + n class = 'anchor' style = 'transform: translateZ(3px) translateY(-33.33%) rotate(' + (-90 * n) + 'deg) translateY(66.67%)')
+            .guess-section 
+                .guess-row 
+                    .move-cart R 
+                    .move-cart U 
+                    .move-cart R' 
+                    .move-cart U' 
+                    .move-cart R 
+                    .move-cart U 
+                    .move-cart R' 
+                    .move-cart U' 
+                
+                
+
