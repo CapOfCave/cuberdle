@@ -1,13 +1,16 @@
 @use 'defaults.scss';
 
 $ground-color: #000000;
+$primary: #0070f3;
+
 $correct-guess-color: #28a745;
 $present-guess-color: #ffc107;
 $absent-guess-color: #6c757d;
 $empty-guess-color: #343a40;
 
 body {
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI','Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans','Helvetica Neue', sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+		"Droid Sans", "Helvetica Neue", sans-serif;
 	color: white;
 }
 
@@ -30,10 +33,64 @@ h1 {
 	background-color: $ground-color;
 }
 
+// .action-button {
+// 	display: inline-block;
+// 	font-weight: 400;
+// 	text-align: center;
+// 	white-space: nowrap;
+// 	vertical-align: middle;
+// 	-webkit-user-select: none;
+// 	-moz-user-select: none;
+// 	-ms-user-select: none;
+// 	user-select: none;
+// 	border: 1px solid transparent;
+// 	border-top-color: transparent;
+// 	border-right-color: transparent;
+// 	border-bottom-color: transparent;
+// 	border-left-color: transparent;
+// 	padding: 0.375rem 0.75rem;
+// 	font-size: 1rem;
+// 	line-height: 1.5;
+// 	border-radius: 0.25rem;
+// 	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+// 		box-shadow 0.15s ease-in-out;
+
+// 	background-color: $primary;
+// 	color: white;
+// }
+
+.action-section {
+	display: flex;
+	justify-content: center;
+}
+
+.action-button {
+	color: white;
+	height: 2.5rem;
+	padding-right: 0.875rem;
+	padding-left: 0.875rem;
+	width: auto;
+	min-width: 12rem;
+	background-color: $primary;
+	font-size: 0.875rem;
+	border-style: none;
+	border-radius: 12px;
+
+	user-select: none;
+
+	&:hover {
+		opacity: 0.85;
+	}
+
+	&:active {
+		transform: scale(0.97);
+	}
+}
+
 .guess-section {
 	display: flex;
 	flex-direction: column;
-	margin-top: 100px
+	margin-top: 30px;
 }
 
 .guess-row {
@@ -54,21 +111,19 @@ h1 {
 	font-weight: bold;
 	text-align: center;
 
-	&[data-state='correct'] {
-		background-color: $correct-guess-color
+	&[data-state="correct"] {
+		background-color: $correct-guess-color;
 	}
 
-	&[data-state='present'] {
-		background-color: $present-guess-color
+	&[data-state="present"] {
+		background-color: $present-guess-color;
 	}
 
-	&[data-state='absent'] {
-		background-color: $absent-guess-color
+	&[data-state="absent"] {
+		background-color: $absent-guess-color;
 	}
 
-	&[data-state='empty'] {
-		background-color: $empty-guess-color
+	&[data-state="empty"] {
+		background-color: $empty-guess-color;
 	}
 }
-
-
