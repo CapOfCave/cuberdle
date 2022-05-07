@@ -1,10 +1,25 @@
 @use 'defaults.scss';
 
 $ground-color: #000000;
+$correct-guess-color: #28a745;
+$present-guess-color: #ffc107;
+$absent-guess-color: #6c757d;
+$empty-guess-color: #343a40;
 
 body {
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI','Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans','Helvetica Neue', sans-serif;
 	color: white;
+}
+
+h1 {
+	letter-spacing: -0.05em;
+	line-height: 1.5;
+	font-size: 3rem;
+	font-weight: 700;
+}
+
+.title {
+	margin-left: 30px;
 }
 
 .container {
@@ -15,7 +30,45 @@ body {
 	background-color: $ground-color;
 }
 
-.preview {
-	height: 30em;
+.guess-section {
+	display: flex;
+	flex-direction: column;
+	margin-top: 100px
 }
+
+.guess-row {
+	display: flex;
+	justify-content: center;
+}
+
+.move-cart {
+	border-radius: 0.1rem;
+	width: 5rem;
+	height: 5rem;
+	margin: 5px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	line-height: 2rem;
+	font-size: 2rem;
+	font-weight: bold;
+	text-align: center;
+
+	&[data-state='correct'] {
+		background-color: $correct-guess-color
+	}
+
+	&[data-state='present'] {
+		background-color: $present-guess-color
+	}
+
+	&[data-state='absent'] {
+		background-color: $absent-guess-color
+	}
+
+	&[data-state='empty'] {
+		background-color: $empty-guess-color
+	}
+}
+
 

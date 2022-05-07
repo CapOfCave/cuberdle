@@ -69,9 +69,9 @@ function animateRotation(face, cw, currentTime) {
 
 // Events
 function mousedown(md_e) {
-    var startXY = pivot.style.transform.match(/-?\d+\.?\d*/g).map(Number),
-        element = md_e.target.closest('.element'),
-        face = [].indexOf.call((element || cube).parentNode.children, element);
+    const startXY = pivot.style.transform.match(/-?\d+\.?\d*/g).map(Number);
+    const element = md_e.target.closest('.element');
+    const face = [].indexOf.call((element || cube).parentNode.children, element);
     function mousemove(mm_e) {
         if (element) {
             var gid = /\d/.exec(document.elementFromPoint(mm_e.pageX, mm_e.pageY).id);

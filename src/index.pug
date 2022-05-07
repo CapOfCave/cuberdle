@@ -4,7 +4,7 @@ html(lang="en")
         title Cuberdle 
     body
         .container
-            h1 Cuberdle
+            h1.title Cuberdle
             #preview.preview
                 - var faces = ['left', 'right', 'top', 'bottom', 'back', 'front'], pieces = 26
                 #scene.scene
@@ -20,14 +20,32 @@ html(lang="en")
                         div(id = 'anchor' + n class = 'anchor' style = 'transform: translateZ(3px) translateY(-33.33%) rotate(' + (-90 * n) + 'deg) translateY(66.67%)')
             .guess-section 
                 .guess-row 
-                    .move-cart R 
-                    .move-cart U 
-                    .move-cart R' 
-                    .move-cart U' 
-                    .move-cart R 
-                    .move-cart U 
-                    .move-cart R' 
-                    .move-cart U' 
+                    .move-cart(data-state='correct') R 
+                    .move-cart(data-state='present') U 
+                    .move-cart(data-state='absent') R' 
+                    .move-cart(data-state='present') U' 
+                    .move-cart(data-state='correct') R 
+                    .move-cart(data-state='absent') U 
+                    .move-cart(data-state='present') R' 
+                    .move-cart(data-state='absent') U' 
+                .guess-row 
+                    .move-cart(data-state='correct') R 
+                    .move-cart(data-state='present') U 
+                    .move-cart(data-state='absent') R' 
+                    .move-cart(data-state='present') U' 
+                    .move-cart(data-state='correct') R 
+                    .move-cart(data-state='absent') U 
+                    .move-cart(data-state='present') R' 
+                    .move-cart(data-state='absent') U' 
+                .guess-row 
+                    .move-cart(data-state='empty') R 
+                    .move-cart(data-state='empty') 
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
                 
                 
 

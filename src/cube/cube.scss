@@ -2,9 +2,15 @@ $base-color: #0A0A0A;
 $element-size: 2em;
 $sticker-size: 95%;
 $rounded: 10%;
-$cube-scale: 1.9;
+$cube-scale: 3;
 $faces: (left: (0, -90, 180), right: (0, 90, 90), back: (0, 180, -90), front: (0, 0, 0), bottom: (-90, 0, -90), top: (90, 0, 180));
 $cube-colors: (blue: #001ca8, green: #006E16, white: #DDD, yellow: #E0AE00, orange: #FF5000, red: #DF0500);
+
+
+.preview {
+	height: 12rem * $cube-scale;
+}
+
 
 .scene {
 	width: 100%;
