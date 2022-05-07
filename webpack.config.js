@@ -9,9 +9,6 @@ const config = {
         path: path.resolve(__dirname, 'dist'),
         filename: "[name].bundle.js",
     },
-    devServer: {
-        port: 3000,
-    },
     plugins: [
         new HtmlWebpackPlugin({
             template: './src/index.pug'
@@ -48,7 +45,14 @@ const config = {
 
 module.exports = (env, argv) => {
     if (argv.mode === 'development') {
-        return { ...config }
+        config.devtool = 'inline-source-map'
+        config.devServer = {
+            port: 3000,
+            static: './dist',
+        }
+        config.optimization = {
+            runtimeChunk: 'single'
+        }
     }
     if (argv.mode === 'production') {
         return { ...config }
