@@ -1,0 +1,36 @@
+{
+  "name": "cuberdle",
+  "version": "1.0.0",
+  "private": true,
+  "repository": "https://github.com/CapOfCave/cuberdle.git",
+  "author": "CapOfCave <lars.kecker2009@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "node-sass": "^7.0.1",
+    "pug": "^3.0.2",
+    "pug-loader": "^2.4.0",
+    "sass": "^1.51.0",
+    "sass-loader": "^12.6.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "scripts": {
+    "build": "webpack --mode=production",
+    "build:dev": "webpack --mode=development",
+    "start:dev": "webpack-dev-server --mode=development"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  }
+}
