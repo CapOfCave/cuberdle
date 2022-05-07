@@ -6,24 +6,63 @@ import './cube.scss'
 const colors = ['blue', 'green', 'white', 'yellow', 'orange', 'red'];
 const pieces = document.getElementsByClassName('piece');
 
-/*
-    FACE INDEX MAPPING
-    0: left
-    1: right
-    2: top
-    3: bottom
-    4: back
-    5: front
-
-    note that the default view shows orange, which is on the backside
+/**
+ * FACE INDEX MAPPING
+ *  0: left
+ *  1: right
+ *  2: top
+ *  3: bottom
+ *  4: back
+ *  5: front
+ * 
+ *  note that the default view shows orange, which is on the backside 
 */
 
-// Returns j-th adjacent face of i-th face
-// i is a face
-// j is a distance
+/**
+ * Transforms the faces in a very twisted way
+ * 
+ * Example: When looking at bottom...
+ *  - ... in direction 0, there is right
+ *  - ... in direction 1, there is front
+ *  - ... in direction 2, there is left
+ *  - ... in direction 3, there is back
+ * 
+ * The direction seem weird, but are consistent with the directional anchors of the cube rotations
+ * 
+ * 
+ * When looking at the cube, the directional values increase counter-clockwise 
+ */
+
+// Original Comment:
+// "Returns j-th adjacent face of i-th face"
+// i is a face index
+// j is a direction?!
+// the result is a face index
+// i think mx literally means "magics"
 function mx(i, j) {
+    /**
+     * Note: x | 0 <=> Math.floor(x)
+     * 
+     * 1st Part: 
+     * 2, 4, 3, 5 depending on j % 4
+     * 
+     * 2nd Part: [-1 taken from 3rd part]
+     * if i is even: (j % 4) * 2 + 3
+     * else -1 
+     * 
+     * 3rd Part: add i
+     * 
+     * All 3 Parts are added
+     * and than modulo-d by 6
+     * 
+     * 
+     * 
+     * 
+     */
     return ([2, 4, 3, 5][j % 4 | 0] + i % 2 * ((j | 0) % 4 * 2 + 3) + 2 * (i / 2 | 0)) % 6;
 }
+
+
 
 function getAxis(face) {
     return String.fromCharCode('X'.charCodeAt(0) + face / 2); // X, Y or Z
@@ -64,6 +103,10 @@ function swapPieces(face, times) {
                     sticker2.className = className;
         }
     }
+}
+
+export function turn(face, clockwise) {
+    animateRotation(face, clockwise, Date.now());
 }
 
 // Animates rotation of the face (by clockwise if cw), and then swaps stickers
@@ -107,8 +150,18 @@ function mousedown(md_e) {
                 // faceIncex according the FACE INDEX MAPPING described above
                 const faceIndex = Array.prototype.indexOf.call(piece.children, face);
 
-                var e = piece.children[mx(faceIndex, Number(anchorIndex) + 3)].hasChildNodes();
-                animateRotation(mx(faceIndex, Number(anchorIndex) + 1 + 2 * e), e, Date.now());
+                // check if a specific face has children (=> A Sticker)
+                // anchorIndex + 3: + 3 in anticlockwise-direction or -1 in clockwise-direction
+                // If the clockwise next value of the target direction is a stickered face, that means it is to the right
+                // => So the layer is turned clockwise (trust me)
+                var clockwise = piece.children[mx(faceIndex, Number(anchorIndex) + 3)].hasChildNodes();
+
+
+                // Get the turned face (which is NOT the face that was touched!)
+                // If the turning direction is clockwise, choose the next face in clockwise direction 
+                // If the turning direction is anti-clockwise, choose the previous one instead
+                // Note that only faces are ever turned, and not layers. So M turns are impossible.
+                turn(mx(faceIndex, Number(anchorIndex) + 1 + 2 * clockwise), clockwise);
             }
         } else {
             // no face selected => cube rotation
