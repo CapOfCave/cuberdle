@@ -73,10 +73,10 @@ function animateRotation(face, cw, currentTime) {
 // Events
 function mousedown(md_e) {
     const startXY = pivot.style.transform.match(/-?\d+\.?\d*/g).map(Number);
-    const element = md_e.target.closest('.element');
-    const face = [].indexOf.call((element || cube).parentNode.children, element);
+    const face = md_e.target.closest('.face');
+    const faceIndex = [].indexOf.call((face || cube).parentNode.children, face);
     function mousemove(mm_e) {
-        if (element) {
+        if (face) {
             // move
             const selectedAnchor = document.elementFromPoint(mm_e.pageX, mm_e.pageY)
             var gid = selectedAnchor.dataset.anchorIndex;
@@ -84,8 +84,8 @@ function mousedown(md_e) {
             // gid being 0 is not a problem - it's still truthy because it's a string ("0")
             if (gid && selectedAnchor.classList.contains('anchor')) {
                 mouseup();
-                var e = element.parentNode.children[mx(face, Number(gid) + 3)].hasChildNodes();
-                animateRotation(mx(face, Number(gid) + 1 + 2 * e), e, Date.now());
+                var e = face.parentNode.children[mx(faceIndex, Number(gid) + 3)].hasChildNodes();
+                animateRotation(mx(faceIndex, Number(gid) + 1 + 2 * e), e, Date.now());
             }
         } else {
             // no face selected => cube rotation
@@ -103,7 +103,7 @@ function mousedown(md_e) {
         scene.addEventListener('mousedown', mousedown);
     }
 
-    (element || document.body).appendChild(guide);
+    (face || document.body).appendChild(guide);
     scene.addEventListener('mousemove', mousemove);
     document.addEventListener('mouseup', mouseup);
     scene.removeEventListener('mousedown', mousedown);
