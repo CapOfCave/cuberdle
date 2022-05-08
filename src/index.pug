@@ -1,7 +1,7 @@
-doctype html 
+doctype html
 html(lang="en")
     head
-        title Cuberdle 
+        title Cuberdle
     body
         .container
             h1.title Cuberdle
@@ -18,37 +18,37 @@ html(lang="en")
                     - var n = 4
                     while n--
                         div(id = 'anchor' + n data-anchor-index = n class = 'anchor' style = 'transform: translateZ(3px) translateY(-33.33%) rotate(' + (-90 * n) + 'deg) translateY(66.67%)')
-            .action-section 
+            .action-section
                 button.action-button(onclick='window.actions.randomeMoveButtonClicked()') Make a random move
                 button.action-button(onclick='window.actions.undoButtonClicked()') Undo previous move
-            .guess-section 
-                .guess-row 
-                    .move-cart(data-state='correct') R 
-                    .move-cart(data-state='present') U 
-                    .move-cart(data-state='absent') R' 
-                    .move-cart(data-state='present') U' 
-                    .move-cart(data-state='correct') R 
-                    .move-cart(data-state='absent') U 
-                    .move-cart(data-state='present') R' 
-                    .move-cart(data-state='absent') U' 
-                .guess-row 
-                    .move-cart(data-state='correct') R 
-                    .move-cart(data-state='present') U 
-                    .move-cart(data-state='absent') R' 
-                    .move-cart(data-state='present') U' 
-                    .move-cart(data-state='correct') R 
-                    .move-cart(data-state='absent') U 
-                    .move-cart(data-state='present') R' 
-                    .move-cart(data-state='absent') U' 
-                .guess-row 
-                    .move-cart(data-state='empty') R 
-                    .move-cart(data-state='empty') 
+            .guess-section
+                #currentGuess.guess-row
                     .move-cart(data-state='empty')
                     .move-cart(data-state='empty')
                     .move-cart(data-state='empty')
                     .move-cart(data-state='empty')
                     .move-cart(data-state='empty')
                     .move-cart(data-state='empty')
-                
-                
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                .guess-row
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                .guess-row
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+                    .move-cart(data-state='empty')
+               
+               
 

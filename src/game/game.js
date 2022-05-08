@@ -1,5 +1,6 @@
 import { rotate } from '../cube/cubeOutput'
 import { Direction } from './constants'
+import { addGuess, removeGuess } from './moveOutput'
 
 const faceNames = ['L', 'R', 'U', 'D', 'B', 'F']
 
@@ -28,13 +29,20 @@ function getNotation(face, direction) {
 // array of { face, direction } objects
 const lastMoves = []
 
+function isStackFull() {
+    return lastMoves.length >= 8 // hard-coded, for now
+}
+
 function addMoveToStack(face, direction) {
     lastMoves.push({ face, direction });
 }
 
 export function turn(face, direction) {
+    if (isStackFull()) return;
     addMoveToStack(face, direction);
     rotate(face, direction);
+    const notation = getNotation(face, direction);
+    addGuess(lastMoves.length - 1, notation);
 }
 
 export function undo() {
@@ -43,4 +51,5 @@ export function undo() {
     const inversedDirection = inverseDirection(lastMove.direction)
     // rotate without adding move to stack
     rotate(lastMove.face, inversedDirection);
+    removeGuess(lastMoves.length)
 }
