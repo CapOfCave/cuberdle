@@ -1,6 +1,6 @@
 
-import { turn } from '../game'
-import { Direction } from './constants';
+import { turn } from '../game/game'
+import { Direction } from '../game/constants';
 import { mx } from './cubeLib'
 
 // Events

@@ -1,4 +1,4 @@
-import { Direction } from './constants';
+import { Direction } from '../game/constants';
 import './cube.scss'
 import { mx } from './cubeLib'
 

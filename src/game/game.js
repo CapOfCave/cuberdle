@@ -1,5 +1,5 @@
-import { rotate } from './cube/cubeOutput'
-import { Direction } from './cube/constants'
+import { rotate } from '../cube/cubeOutput'
+import { Direction } from './constants'
 
 const faceNames = ['L', 'R', 'U', 'D', 'B', 'F']
 

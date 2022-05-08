@@ -1,7 +1,7 @@
-import { directionsList } from './cube/constants';
+import { directionsList } from './game/constants';
 import { init as inputInit } from './cube/cubeInput';
 import { init as outputInit } from './cube/cubeOutput';
-import { turn, undo } from './game';
+import { turn, undo } from './game/game';
 import "./style.scss";
 
 function init() {
