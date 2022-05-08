@@ -1,5 +1,5 @@
 import { rotate } from '../cube/cubeOutput'
-import { Direction } from './constants'
+import { Direction, directionsList } from './constants'
 import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput'
 
 const faceNames = ['L', 'R', 'U', 'D', 'B', 'F']
@@ -11,17 +11,31 @@ const EvaluationState = {
     EMPTY: 'empty', // uncolored
 }
 
-// hard-coded, for now
-const solution = [ "F'", "L'", "F'", "U", "L'" ]
-const GUESS_LENGTH = solution.length;
-
 const GUESS_COUNT = 5;
+const GUESS_LENGTH = 5;
 
 const DIRECTION_NOTATIONS = {
     [Direction.CLOCKWISE]: '',
     [Direction.ANTI_CLOCKWISE]: "'",
     [Direction.DOUBLE_MOVE]: '2',
 }
+
+function initSolution() {
+
+    const solution = []
+    for (let i = 0; i < GUESS_LENGTH; i++) {
+        const direction = directionsList[Math.floor(Math.random() * 2)];
+        const face = Math.floor(Math.random() * 6);
+        const notation = getNotation(face, direction)
+        solution.push(notation);
+    }
+    console.log(solution)
+    return solution;
+}
+
+const solution = initSolution();
+
+
 
 function getDirectionNotation(direction) {
     return DIRECTION_NOTATIONS[direction]
