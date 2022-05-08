@@ -1,6 +1,6 @@
 import { rotate } from '../cube/cubeOutput'
 import { Direction } from './constants'
-import { addEvaluation, addGuess, moveToNextGuess, removeGuess } from './moveOutput'
+import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput'
 
 const faceNames = ['L', 'R', 'U', 'D', 'B', 'F']
 
@@ -141,7 +141,10 @@ function clearCube() {
     }
 }
 
-
+function isAllCorrect(evaluations) {
+    console.log(evaluations)
+    return evaluations.every(evaluation => evaluation === EvaluationState.CORRECT)
+}
 
 export function submit() {
     if (lastMoves.length != GUESS_LENGTH) return;
@@ -149,9 +152,16 @@ export function submit() {
     const evaluations = evaluateGuess(lastMoves, solution);
     previousEvaluations.push(evaluations)
     addEvaluation(evaluations)
-    moveToNextGuess();
-    clearCube()
-    console.log(previousGuesses[0])
+    if (isAllCorrect(evaluations)) {
+        fixateFinalGuess();
+        console.log("wow! nice! you won!")
+    } else if (previousGuesses.length >= GUESS_COUNT){
+        fixateFinalGuess();
+        console.log("oh no. You lost");
+    } else {
+        moveToNextGuess();
+        clearCube()
+    }    
 }
 
 
