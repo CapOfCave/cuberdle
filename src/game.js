@@ -11,8 +11,13 @@ function getDirectionNotation(direction) {
     }
 }
 
-// array of { face, direction } objects
-let lastMoves = []
+function inverseDirection(direction) {
+    switch (direction) {
+        case Direction.CLOCKWISE: return Direction.ANTI_CLOCKWISE;
+        case Direction.ANTI_CLOCKWISE: return Direction.CLOCKWISE;
+        case Direction.DOUBLE_MOVE: return Direction.DOUBLE_MOVE;
+    }
+}
 
 function getNotation(face, direction) {
     const faceNotation = faceNames[face];
@@ -20,29 +25,22 @@ function getNotation(face, direction) {
     return `${faceNotation}${directionNotation}`
 }
 
+// array of { face, direction } objects
+const lastMoves = []
+
 function addMoveToStack(face, direction) {
     lastMoves.push({ face, direction });
 }
 
 export function turn(face, direction) {
-    addMoveToStack(face, direction)
-
-    switch (direction) {
-        case Direction.CLOCKWISE:
-            rotate(face, true);
-            break;
-        case Direction.ANTI_CLOCKWISE:
-            rotate(face, false);
-            break;
-        case Direction.DOUBLE_MOVE:
-            rotate(face, true);
-            rotate(face, true);
-            break;
-        default:
-            throw new Error(`Unknown direction: ${direction}`)
-    }
+    addMoveToStack(face, direction);
+    rotate(face, direction);
 }
 
 export function undo() {
-
+    if (lastMoves.length == 0) return;
+    const lastMove = lastMoves.pop();
+    const inversedDirection = inverseDirection(lastMove.direction)
+    // rotate without adding move to stack
+    rotate(lastMove.face, inversedDirection);
 }

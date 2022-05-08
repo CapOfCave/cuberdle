@@ -1,3 +1,4 @@
+import { Direction } from './constants';
 import './cube.scss'
 import { mx } from './cubeLib'
 
@@ -61,7 +62,8 @@ function swapPieces(face, times) {
 }
 
 // Animates rotation of the face (by clockwise if cw), and then swaps stickers
-function animateRotation(face, cw, currentTime) {
+function animateRotation(face, cw) {
+    const currentTime =  Date.now();
     var k = .3 * (face % 2 * 2 - 1) * (2 * cw - 1),
         qubes = Array(9).fill(pieces[face]).map(function (value, index) {
             return index ? getPieceBy(face, index / 2, index % 2) : value;
@@ -78,9 +80,25 @@ function animateRotation(face, cw, currentTime) {
     })();
 }
 
-export function rotate(face, clockwise) {
-    animateRotation(face, clockwise, Date.now());
+export function rotate(face, direction) {
+    switch (direction) {
+        case Direction.CLOCKWISE:
+            animateRotation(face, true);
+            break;
+        case Direction.ANTI_CLOCKWISE:
+            animateRotation(face, false);
+            break;
+        case Direction.DOUBLE_MOVE:
+            animateRotation(face, true);
+            animateRotation(face, true);
+            break;
+        default:
+            throw new Error(`Unknown direction: ${direction}`)
+    }
 }
+
+
+
 
 export function init () {
     window.addEventListener('load', assembleCube);
