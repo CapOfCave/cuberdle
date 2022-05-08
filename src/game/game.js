@@ -9,6 +9,8 @@ import { getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNum
 const GUESS_COUNT = 5;
 const GUESS_LENGTH = 5;
 
+const ALLOW_DOUBLE_MOVES = false;
+
 /**
  * Adds a new Move to the stack, possibly by combining it with the last one that existed
  * Does NOT check if the lastMoves array overflows! This should be checked elsewhere.
@@ -34,16 +36,21 @@ const GUESS_LENGTH = 5;
     const directionValue = mapDirectionToNumber(newMove.direction) + mapDirectionToNumber(previousMove.direction);
     const resultingDirection = mapNumberToDirection(directionValue);
 
-    stack.pop();
+    
     if (resultingDirection === null) {
+        stack.pop();
         return { status: "removed" };
     }
-
-    const resultingMove = getNotation(newMove.face, resultingDirection);
-
-    stack.push(resultingMove);
-
-    return { status: "modified", notation: resultingMove };
+    
+    if (ALLOW_DOUBLE_MOVES) {
+        const resultingMove = getNotation(newMove.face, resultingDirection);
+        stack.pop();
+        stack.push(resultingMove);
+        return { status: "modified", notation: resultingMove };
+    } else {
+        stack.push(notation);
+        return { status: "appended", notation };
+    }
 }
 
 
