@@ -12,7 +12,7 @@ function mousedown(md_e) {
             const piece = face.parentNode;
 
             // move
-            const selectedAnchor = document.elementFromPoint(mm_e.pageX, mm_e.pageY)
+            const selectedAnchor = document.elementFromPoint(mm_e.clientX, mm_e.clientY)
             // the anchorIndex maps to the turnDirection (but the mapping has not been discovered yet)
             var anchorIndex = selectedAnchor?.dataset?.anchorIndex;
             // selectedAnchor will be the anchor element upon leaving the current sticker
