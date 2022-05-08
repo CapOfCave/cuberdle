@@ -26,3 +26,30 @@ export function getObjectFromNotation(notation) {
     const direction = Object.keys(DIRECTION_NOTATIONS).find(key => DIRECTION_NOTATIONS[key] === notation.charAt(1));
     return { face, direction }
 }
+
+/**
+ * Return a direction to the number of clockwise rotation it needs to reach said direction
+ */
+export function mapDirectionToNumber(direction) {
+    switch (direction) {
+        case Direction.CLOCKWISE: return 1;
+        case Direction.ANTI_CLOCKWISE: return 3;
+        case Direction.DOUBLE_MOVE: return 2;
+    }
+}
+
+/**
+ * Return a direction to the number of clockwise rotation it needs to reach said direction
+ */
+ export function mapNumberToDirection(directionNumber) {
+    if (directionNumber % 4 === 0) return null;
+    
+    switch (directionNumber % 4) {
+        case 0: return null;
+        case 1: return Direction.CLOCKWISE;
+        case 2: return Direction.DOUBLE_MOVE;
+        case 3: return Direction.ANTI_CLOCKWISE;
+    }
+
+
+}

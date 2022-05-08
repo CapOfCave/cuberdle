@@ -99,17 +99,17 @@ function animateRotation(face, cw, duration = 300) {
     
 }
 
-export function rotate(face, direction) {
+export function rotate(face, direction, skipAnimation = false) {
     switch (direction) {
         case Direction.CLOCKWISE:
-            animateRotation(face, true);
+            animateRotation(face, true, skipAnimation ? 1 : undefined);
             break;
         case Direction.ANTI_CLOCKWISE:
-            animateRotation(face, false);
+            animateRotation(face, false, skipAnimation ? 1 : undefined);
             break;
         case Direction.DOUBLE_MOVE:
-            animateRotation(face, true)
-                .then(() => animateRotation(face, true, 200));
+            animateRotation(face, true, skipAnimation ? 1 : 200)
+                .then(() => animateRotation(face, true, skipAnimation ? 1 : 200));
             break;
         default:
             throw new Error(`Unknown direction: ${direction}`)

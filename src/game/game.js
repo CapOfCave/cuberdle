@@ -1,28 +1,72 @@
-import { rotate } from '../cube/cubeOutput'
-import { Direction, directionsList, EvaluationState } from './constants'
-import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput'
-import { getNotation, getObjectFromNotation, inverseDirection } from './utils';
+import { rotate } from '../cube/cubeOutput';
+import { directionsList, EvaluationState } from './constants';
+import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
+import { getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
 
+// ##########
+// # Config #
+// ##########
 const GUESS_COUNT = 5;
 const GUESS_LENGTH = 5;
 
-let gameOver = false;
+/**
+ * Adds a new Move to the stack, possibly by combining it with the last one that existed
+ * Does NOT check if the lastMoves array overflows! This should be checked elsewhere.
+ * 
+ * Return an array that indicates if the value was appended or the last element was modified/removed 
+ * and the notation of the resulting move (if applicable)
+ */
+ function addMoveToStack(notation, stack) {
+    if (stack.length === 0) {
+        stack.push(notation);
+        return { status: "appended", notation };
+    }
+
+    const newMove = getObjectFromNotation(notation);
+    const previousMoveNotation = stack[stack.length - 1];
+
+    const previousMove = getObjectFromNotation(previousMoveNotation);
+    if (previousMove.face !== newMove.face) {
+        stack.push(notation);
+        return { status: "appended", notation };
+    }
+
+    const directionValue = mapDirectionToNumber(newMove.direction) + mapDirectionToNumber(previousMove.direction);
+    const resultingDirection = mapNumberToDirection(directionValue);
+
+    stack.pop();
+    if (resultingDirection === null) {
+        return { status: "removed" };
+    }
+
+    const resultingMove = getNotation(newMove.face, resultingDirection);
+
+    stack.push(resultingMove);
+
+    return { status: "modified", notation: resultingMove };
+}
+
 
 function initSolution() {
     const solution = []
-    for (let i = 0; i < GUESS_LENGTH; i++) {
+    while (solution.length < GUESS_LENGTH) {
         const direction = directionsList[Math.floor(Math.random() * 2)];
         const face = Math.floor(Math.random() * 6);
         const notation = getNotation(face, direction)
-        solution.push(notation);
+        addMoveToStack(notation, solution);
     }
     return solution;
 }
 
-const solution = initSolution();
+// ##############
+// # GAME STATE #
+// ##############
 
+const solution = initSolution();
+// const solution = [ "L", "D'", "B", "F'", "D"  ];
 // array of ["U", "F'", "D2"...] strings
 let lastMoves = []
+let gameOver = false;
 
 const previousGuesses = [];
 const previousEvaluations = [];
@@ -58,9 +102,9 @@ function evaluateGuess(guess, solution) {
     // Step 2: Get yellow values
     for (let i = 0; i < solution.length; i++) {
         if (result[i] !== EvaluationState.ABSENT) continue;
-        
+
         const guessedMove = guess[i];
-        if (remainingOccurencesOfMove[guessedMove] > 0 ) {
+        if (remainingOccurencesOfMove[guessedMove] > 0) {
             result[i] = EvaluationState.PRESENT;
             remainingOccurencesOfMove[guess[i]]--;
         }
@@ -72,24 +116,31 @@ function isStackFull() {
     return lastMoves.length >= GUESS_LENGTH
 }
 
-function addMoveToStack(notation) {
-    lastMoves.push(notation);
-}
 
 export function turn(face, direction) {
     if (gameOver) return;
-    if (isStackFull()) return;
+    if (isStackFull() && face != getObjectFromNotation(lastMoves[lastMoves.length - 1]).face) return;
     const notation = getNotation(face, direction);
     rotate(face, direction);
-    addMoveToStack(notation);
-    addGuess(lastMoves.length - 1, notation);
+    const addMoveResponse = addMoveToStack(notation, lastMoves);
+    switch ( addMoveResponse.status ) {
+        case "appended": 
+            addGuess(lastMoves.length - 1, addMoveResponse.notation);
+            break;
+        case "modified":
+            addGuess(lastMoves.length - 1, addMoveResponse.notation);
+        case "removed":
+            removeGuess(lastMoves.length);
+    }
+
+    
 }
 
-function revert(moveNotation) {
+function revert(moveNotation, skipAnimation = false) {
     const lastMove = getObjectFromNotation(moveNotation);
     const inversedDirection = inverseDirection(lastMove.direction)
     // rotate without adding move to stack
-    rotate(lastMove.face, inversedDirection);
+    rotate(lastMove.face, inversedDirection, skipAnimation);
 }
 
 export function undo() {
@@ -105,6 +156,9 @@ export function clearGuess() {
     }
 }
 
+/**
+ * Clear the Cube without affecting the last guess
+ */
 function clearCube() {
     while (lastMoves.length > 0) {
         revert(lastMoves.pop())
@@ -126,15 +180,15 @@ export function submit() {
         lastMoves = []
         gameOver = true;
         console.log("wow! nice! you won!")
-    } else if (previousGuesses.length >= GUESS_COUNT){
+    } else if (previousGuesses.length >= GUESS_COUNT) {
         fixateFinalGuess();
         lastMoves = []
         gameOver = true;
-        console.log("oh no. You lost");
+        console.log("oh no. You lost. The solution was", solution);
     } else {
         moveToNextGuess();
         clearCube()
-    }    
+    }
 }
 
 
@@ -142,8 +196,9 @@ function setup() {
     setupGuesses();
     setupCube();
 }
+
 function setupCube() {
-    [...solution].reverse().forEach(notation => revert(notation)) 
+    [...solution].reverse().forEach(notation => revert(notation, true))
 }
 
 function setupGuesses() {
