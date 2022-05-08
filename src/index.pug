@@ -22,34 +22,18 @@ html(lang="en")
                 button.action-button(onclick='window.actions.randomMoveButtonClicked()') Make a random move
                 button.action-button(onclick='window.actions.undoButtonClicked()') Undo previous move
                 button.action-button(onclick='window.actions.clearButtonClicked()') Clear
-            .guess-section
-                #currentGuess.guess-row
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                .guess-row
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                .guess-row
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
-                    .move-cart(data-state='empty')
+            #guessSection.guess-section
+            //- Generated at runtime, will look like this:
+            //- #currentGuess.guess-row
+            //-         .move-cart(data-state='empty')
+            //-         .move-cart(data-state='empty')
+            //-         .move-cart(data-state='empty')
+            //-         .move-cart(data-state='empty')
+            //-         .move-cart(data-state='empty')
+            //-         .move-cart(data-state='empty')
+            //-         .move-cart(data-state='empty')
+            //-         .move-cart(data-state='empty')
+                
             .submit-section.action-section
                 button.action-button(onclick='window.actions.submitButtonClicked()') Submit
                

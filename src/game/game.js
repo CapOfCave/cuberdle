@@ -12,7 +12,7 @@ const EvaluationState = {
 }
 
 const GUESS_LENGTH = 8;
-const GUESS_COUNT = 3;
+const GUESS_COUNT = 5;
 
 const DIRECTION_NOTATIONS = {
     [Direction.CLOCKWISE]: '',
@@ -49,6 +49,9 @@ function getObjectFromNotation(notation) {
 
 // array of ["U", "F'", "D2"...] strings
 const lastMoves = []
+
+const previousGuesses = [];
+const previousEvaluations = [];
 
 /**
  * Evaluate a guess by returning it's evaluation array (which contains the strings 'correct', 'present', and 'absent')
@@ -136,12 +139,48 @@ function clearCube() {
 }
 
 // hard-coded, for now
-const solution = ["D", "B'", "B", "U", "D'", "U", "R'", "U"]
+const solution = [ "R", "U", "R", "D'", "R", "U'", "L", "D" ]
 
 export function submit() {
     if (lastMoves.length != GUESS_LENGTH) return;
+    previousGuesses.push([...lastMoves]);
     const evaluations = evaluateGuess(lastMoves, solution);
+    previousEvaluations.push(evaluations)
     addEvaluation(evaluations)
     moveToNextGuess();
     clearCube()
+    console.log(previousGuesses[0])
+}
+
+
+function setup() {
+    setupGuesses();
+    setupCube();
+}
+function setupCube() {
+    solution.reverse().forEach(notation => revert(notation)) 
+}
+
+function setupGuesses() {
+    console.log("hi")
+    for (let i = 0; i < GUESS_COUNT; i++) {
+        const guessRow = document.createElement('div');
+        guessRow.classList.add('guess-row')
+        if (i === 0) guessRow.setAttribute('id', 'currentGuess');
+
+        for (let j = 0; j < GUESS_LENGTH; j++) {
+            const moveCard = document.createElement('div');
+            moveCard.classList.add('move-card')
+            moveCard.dataset.state = EvaluationState.EMPTY;
+            guessRow.appendChild(moveCard)
+        }
+
+        const guessSection = document.getElementById("guessSection")
+        guessSection.appendChild(guessRow);
+    }
+}
+
+export function init() {
+    window.addEventListener('load', setup);
+
 }

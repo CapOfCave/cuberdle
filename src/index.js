@@ -1,12 +1,13 @@
 import { directionsList } from './game/constants';
 import { init as inputInit } from './cube/cubeInput';
 import { init as outputInit } from './cube/cubeOutput';
-import { turn, undo, submit, clearGuess } from './game/game';
+import { turn, undo, submit, clearGuess, init as initCube } from './game/game';
 import "./style.scss";
 
 function init() {
     inputInit();
     outputInit();
+    initCube();
 }
 
 function randomMoveButtonClicked() {
