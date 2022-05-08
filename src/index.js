@@ -1,7 +1,7 @@
 import { directionsList } from './game/constants';
 import { init as inputInit } from './cube/cubeInput';
 import { init as outputInit } from './cube/cubeOutput';
-import { turn, undo } from './game/game';
+import { turn, undo, submit, clearGuess } from './game/game';
 import "./style.scss";
 
 function init() {
@@ -9,7 +9,7 @@ function init() {
     outputInit();
 }
 
-function randomeMoveButtonClicked() {
+function randomMoveButtonClicked() {
     // no double moves for now
     const direction = directionsList[Math.floor(Math.random() * 2)];
     turn(Math.floor(Math.random() * 6), direction);
@@ -19,8 +19,18 @@ function undoButtonClicked() {
     undo();
 }
 
+function submitButtonClicked() {
+    submit();
+}
+
+function clearButtonClicked() {
+    clearGuess()
+}
+
 init();
 window.actions = {
-    randomeMoveButtonClicked,
+    randomMoveButtonClicked,
     undoButtonClicked,
+    submitButtonClicked,
+    clearButtonClicked,
 }

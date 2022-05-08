@@ -19,8 +19,9 @@ html(lang="en")
                     while n--
                         div(id = 'anchor' + n data-anchor-index = n class = 'anchor' style = 'transform: translateZ(3px) translateY(-33.33%) rotate(' + (-90 * n) + 'deg) translateY(66.67%)')
             .action-section
-                button.action-button(onclick='window.actions.randomeMoveButtonClicked()') Make a random move
+                button.action-button(onclick='window.actions.randomMoveButtonClicked()') Make a random move
                 button.action-button(onclick='window.actions.undoButtonClicked()') Undo previous move
+                button.action-button(onclick='window.actions.clearButtonClicked()') Clear
             .guess-section
                 #currentGuess.guess-row
                     .move-cart(data-state='empty')
@@ -49,6 +50,8 @@ html(lang="en")
                     .move-cart(data-state='empty')
                     .move-cart(data-state='empty')
                     .move-cart(data-state='empty')
+            .submit-section.action-section
+                button.action-button(onclick='window.actions.submitButtonClicked()') Submit
                
                
 
