@@ -19,7 +19,8 @@ html(lang="en")
                     while n--
                         div(id = 'anchor' + n data-anchor-index = n class = 'anchor' style = 'transform: translateZ(3px) translateY(-33.33%) rotate(' + (-90 * n) + 'deg) translateY(66.67%)')
             .action-section 
-                button.action-button(onclick='window.undoButtonClicked()') Make a random move
+                button.action-button(onclick='window.actions.randomeMoveButtonClicked()') Make a random move
+                button.action-button(onclick='window.actions.undoButtonClicked()') Undo previous move
             .guess-section 
                 .guess-row 
                     .move-cart(data-state='correct') R 

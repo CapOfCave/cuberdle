@@ -1,5 +1,6 @@
 
 import { turn } from '../game'
+import { Direction } from './constants';
 import { mx } from './cubeLib'
 
 // Events
@@ -34,7 +35,7 @@ function mousedown(md_e) {
                 // If the turning direction is clockwise, choose the next face in clockwise direction 
                 // If the turning direction is anti-clockwise, choose the previous one instead
                 // Note that only faces are ever turned, and not layers. So M turns are impossible.
-                turn(mx(faceIndex, Number(anchorIndex) + 1 + 2 * clockwise), clockwise);
+                turn(mx(faceIndex, Number(anchorIndex) + 1 + 2 * clockwise), clockwise ? Direction.CLOCKWISE : Direction.ANTI_CLOCKWISE);
             }
         } else {
             // no face selected => cube rotation

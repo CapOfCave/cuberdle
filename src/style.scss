@@ -62,6 +62,11 @@ h1 {
 .action-section {
 	display: flex;
 	justify-content: center;
+
+	.action-button {
+		margin-left: 20px;
+		margin-right: 20px;
+	}
 }
 
 .action-button {
@@ -85,6 +90,7 @@ h1 {
 	&:active {
 		transform: scale(0.97);
 	}
+
 }
 
 .guess-section {
