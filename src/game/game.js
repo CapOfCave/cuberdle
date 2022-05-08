@@ -11,7 +11,10 @@ const EvaluationState = {
     EMPTY: 'empty', // uncolored
 }
 
-const GUESS_LENGTH = 8;
+// hard-coded, for now
+const solution = [ "F'", "L'", "F'", "U", "L'" ]
+const GUESS_LENGTH = solution.length;
+
 const GUESS_COUNT = 5;
 
 const DIRECTION_NOTATIONS = {
@@ -138,8 +141,7 @@ function clearCube() {
     }
 }
 
-// hard-coded, for now
-const solution = [ "R", "U", "R", "D'", "R", "U'", "L", "D" ]
+
 
 export function submit() {
     if (lastMoves.length != GUESS_LENGTH) return;
@@ -158,7 +160,7 @@ function setup() {
     setupCube();
 }
 function setupCube() {
-    solution.reverse().forEach(notation => revert(notation)) 
+    [...solution].reverse().forEach(notation => revert(notation)) 
 }
 
 function setupGuesses() {
