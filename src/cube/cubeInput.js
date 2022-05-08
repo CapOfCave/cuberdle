@@ -28,14 +28,20 @@ function mousedown(md_e) {
                 // anchorIndex + 3: + 3 in anticlockwise-direction or -1 in clockwise-direction
                 // If the clockwise next value of the target direction is a stickered face, that means it is to the right
                 // => So the layer is turned clockwise (trust me)
-                var clockwise = piece.children[mx(faceIndex, Number(anchorIndex) + 3)].hasChildNodes();
 
+                const clockwisePossible = piece.children[mx(faceIndex, Number(anchorIndex) + 3)].hasChildNodes();
+                const counterClockwisePossible = piece.children[mx(faceIndex, Number(anchorIndex) + 1)].hasChildNodes();
+
+                if (!clockwisePossible && !counterClockwisePossible) {
+                    // M move, do nothing for now
+                    return;
+                }
 
                 // Get the turned face (which is NOT the face that was touched!)
                 // If the turning direction is clockwise, choose the next face in clockwise direction 
                 // If the turning direction is anti-clockwise, choose the previous one instead
                 // Note that only faces are ever turned, and not layers. So M turns are impossible.
-                turn(mx(faceIndex, Number(anchorIndex) + 1 + 2 * clockwise), clockwise ? Direction.CLOCKWISE : Direction.ANTI_CLOCKWISE);
+                turn(mx(faceIndex, Number(anchorIndex) + 1 + 2 * clockwisePossible), clockwisePossible ? Direction.CLOCKWISE : Direction.ANTI_CLOCKWISE);
             }
         } else {
             // no face selected => cube rotation
@@ -59,7 +65,7 @@ function mousedown(md_e) {
     scene.removeEventListener('mousedown', mousedown);
 }
 
-export function init () {
+export function init() {
     document.ondragstart = function () { return false; }
     scene.addEventListener('mousedown', mousedown);
 }

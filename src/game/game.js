@@ -31,7 +31,6 @@ function initSolution() {
         const notation = getNotation(face, direction)
         solution.push(notation);
     }
-    console.log(solution)
     return solution;
 }
 
@@ -121,8 +120,6 @@ function addMoveToStack(notation) {
 }
 
 export function turn(face, direction) {
-    console.log(GUESS_LENGTH, lastMoves)
-    console.log(GUESS_COUNT, previousGuesses)
     if (gameOver) return;
     if (isStackFull()) return;
     const notation = getNotation(face, direction);
