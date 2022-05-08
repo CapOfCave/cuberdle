@@ -51,7 +51,7 @@ function getObjectFromNotation(notation) {
 }
 
 // array of ["U", "F'", "D2"...] strings
-const lastMoves = []
+let lastMoves = []
 
 const previousGuesses = [];
 const previousEvaluations = [];
@@ -106,10 +106,8 @@ function addMoveToStack(notation) {
 }
 
 export function turn(face, direction) {
-    console.log("turn", face, direction)
     if (isStackFull()) return;
     const notation = getNotation(face, direction);
-    console.log(notation)
     rotate(face, direction);
     addMoveToStack(notation);
     addGuess(lastMoves.length - 1, notation);
@@ -142,7 +140,6 @@ function clearCube() {
 }
 
 function isAllCorrect(evaluations) {
-    console.log(evaluations)
     return evaluations.every(evaluation => evaluation === EvaluationState.CORRECT)
 }
 
@@ -154,9 +151,11 @@ export function submit() {
     addEvaluation(evaluations)
     if (isAllCorrect(evaluations)) {
         fixateFinalGuess();
+        lastMoves = []
         console.log("wow! nice! you won!")
     } else if (previousGuesses.length >= GUESS_COUNT){
         fixateFinalGuess();
+        lastMoves = []
         console.log("oh no. You lost");
     } else {
         moveToNextGuess();
@@ -174,7 +173,6 @@ function setupCube() {
 }
 
 function setupGuesses() {
-    console.log("hi")
     for (let i = 0; i < GUESS_COUNT; i++) {
         const guessRow = document.createElement('div');
         guessRow.classList.add('guess-row')
