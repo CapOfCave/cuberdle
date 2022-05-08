@@ -1,29 +1,14 @@
 import { rotate } from '../cube/cubeOutput'
-import { Direction, directionsList } from './constants'
+import { Direction, directionsList, EvaluationState } from './constants'
 import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput'
-
-const faceNames = ['L', 'R', 'U', 'D', 'B', 'F']
-
-const EvaluationState = {
-    CORRECT: 'correct', // green
-    PRESENT: 'present', // yellow
-    ABSENT: 'absent', // grey
-    EMPTY: 'empty', // uncolored
-}
+import { getNotation, getObjectFromNotation, inverseDirection } from './utils';
 
 const GUESS_COUNT = 5;
 const GUESS_LENGTH = 5;
 
-const DIRECTION_NOTATIONS = {
-    [Direction.CLOCKWISE]: '',
-    [Direction.ANTI_CLOCKWISE]: "'",
-    [Direction.DOUBLE_MOVE]: '2',
-}
-
 let gameOver = false;
 
 function initSolution() {
-
     const solution = []
     for (let i = 0; i < GUESS_LENGTH; i++) {
         const direction = directionsList[Math.floor(Math.random() * 2)];
@@ -35,34 +20,6 @@ function initSolution() {
 }
 
 const solution = initSolution();
-
-
-function getDirectionNotation(direction) {
-    return DIRECTION_NOTATIONS[direction]
-}
-
-function inverseDirection(direction) {
-    switch (direction) {
-        case Direction.CLOCKWISE: return Direction.ANTI_CLOCKWISE;
-        case Direction.ANTI_CLOCKWISE: return Direction.CLOCKWISE;
-        case Direction.DOUBLE_MOVE: return Direction.DOUBLE_MOVE;
-    }
-}
-
-function getNotation(face, direction) {
-    const faceNotation = faceNames[face];
-    const directionNotation = getDirectionNotation(direction)
-    return `${faceNotation}${directionNotation}`
-}
-
-/**
- * Return the {face, direction} representation of the notation string 
- */
-function getObjectFromNotation(notation) {
-    const face = faceNames.indexOf(notation.charAt(0));
-    const direction = Object.keys(DIRECTION_NOTATIONS).find(key => DIRECTION_NOTATIONS[key] === notation.charAt(1));
-    return { face, direction }
-}
 
 // array of ["U", "F'", "D2"...] strings
 let lastMoves = []
@@ -209,5 +166,4 @@ function setupGuesses() {
 
 export function init() {
     window.addEventListener('load', setup);
-
 }
