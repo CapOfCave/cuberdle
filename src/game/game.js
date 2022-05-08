@@ -119,14 +119,32 @@ function evaluateGuess(guess, solution) {
     return result;
 }
 
-function isStackFull() {
-    return lastMoves.length >= GUESS_LENGTH
-}
+function isNextMoveOverflowing(face, direction) {   
 
+    if (lastMoves.length === 0) {
+        return false;
+    }
+
+    const last = getObjectFromNotation(lastMoves[lastMoves.length - 1])
+
+    if (ALLOW_DOUBLE_MOVES && face === last.face) {
+        // with double moves, all moves of the same face will combine
+        return false;
+    }
+
+
+    if (!ALLOW_DOUBLE_MOVES && face === last.face && direction !== last.direction) {
+        // without double moves, only moves in opposite directions will combine
+        // since there are no double moves, all different moves will be opposite moves
+        return false;
+    }
+    return lastMoves.length >= GUESS_LENGTH;
+
+}
 
 export function turn(face, direction) {
     if (gameOver) return;
-    if (isStackFull() && face != getObjectFromNotation(lastMoves[lastMoves.length - 1]).face) return;
+    if (isNextMoveOverflowing(face, direction)) return;
     const notation = getNotation(face, direction);
     rotate(face, direction);
     const addMoveResponse = addMoveToStack(notation, lastMoves);
@@ -139,7 +157,6 @@ export function turn(face, direction) {
         case "removed":
             removeGuess(lastMoves.length);
     }
-
     
 }
 
