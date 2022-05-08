@@ -4,6 +4,8 @@ name: CD
 on:
   push:
     branches: main
+  workflow_dispatch:
+    
 
 # Jobs to carry out
 jobs:
