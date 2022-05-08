@@ -62,22 +62,41 @@ function swapPieces(face, times) {
 }
 
 // Animates rotation of the face (by clockwise if cw), and then swaps stickers
-function animateRotation(face, cw) {
+function animateRotation(face, cw, duration = 300) {
     const currentTime =  Date.now();
-    var k = .3 * (face % 2 * 2 - 1) * (2 * cw - 1),
-        qubes = Array(9).fill(pieces[face]).map(function (value, index) {
-            return index ? getPieceBy(face, index / 2, index % 2) : value;
-        });
-    (function rotatePieces() {
-        var passed = Date.now() - currentTime,
-            style = 'rotate' + getAxis(face) + '(' + k * passed * (passed < 300) + 'deg)';
-        qubes.forEach(function (piece) {
-            piece.style.transform = piece.style.transform.replace(/rotate.\(\S+\)/, style);
-        });
-        if (passed >= 300)
-            return swapPieces(face, 3 - 2 * cw);
-        requestAnimationFrame(rotatePieces);
-    })();
+
+    // reach 90 degrees after DURATION milliseconds
+    const animationSpeed = 90 / duration
+    
+    // negative if face is even xor direction is counter-clockwise
+    const animationSign = (face % 2 * 2 - 1) * (2 * cw - 1)
+
+    // get all relevant cubes that will be affected by this transformation
+    const qubes = Array(9).fill(pieces[face]).map((value, index) => {
+        return index ? getPieceBy(face, index / 2, index % 2) : value;
+    });
+
+    return new Promise((resolve, _reject) => {
+        (function rotatePieces() {
+            const passed = Date.now() - currentTime
+            const style = 'rotate' + getAxis(face) + '(' + animationSign * animationSpeed * passed * (passed < duration) + 'deg)';
+    
+            qubes.forEach(function (piece) {
+                piece.style.transform = piece.style.transform.replace(/rotate.\(\S+\)/, style);
+            });
+    
+            if (passed >= duration) {
+                swapPieces(face, 3 - 2 * cw);
+                resolve();
+                // ... and stop animation
+                return;
+            }
+                
+            requestAnimationFrame(rotatePieces);
+        })();
+    })
+
+    
 }
 
 export function rotate(face, direction) {
@@ -89,8 +108,8 @@ export function rotate(face, direction) {
             animateRotation(face, false);
             break;
         case Direction.DOUBLE_MOVE:
-            animateRotation(face, true);
-            animateRotation(face, true);
+            animateRotation(face, true)
+                .then(() => animateRotation(face, true, 200));
             break;
         default:
             throw new Error(`Unknown direction: ${direction}`)
