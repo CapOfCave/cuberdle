@@ -20,6 +20,8 @@ const DIRECTION_NOTATIONS = {
     [Direction.DOUBLE_MOVE]: '2',
 }
 
+let gameOver = false;
+
 function initSolution() {
 
     const solution = []
@@ -34,7 +36,6 @@ function initSolution() {
 }
 
 const solution = initSolution();
-
 
 
 function getDirectionNotation(direction) {
@@ -120,6 +121,9 @@ function addMoveToStack(notation) {
 }
 
 export function turn(face, direction) {
+    console.log(GUESS_LENGTH, lastMoves)
+    console.log(GUESS_COUNT, previousGuesses)
+    if (gameOver) return;
     if (isStackFull()) return;
     const notation = getNotation(face, direction);
     rotate(face, direction);
@@ -166,10 +170,12 @@ export function submit() {
     if (isAllCorrect(evaluations)) {
         fixateFinalGuess();
         lastMoves = []
+        gameOver = true;
         console.log("wow! nice! you won!")
     } else if (previousGuesses.length >= GUESS_COUNT){
         fixateFinalGuess();
         lastMoves = []
+        gameOver = true;
         console.log("oh no. You lost");
     } else {
         moveToNextGuess();
