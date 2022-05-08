@@ -3,9 +3,10 @@ import './cube.scss'
 // this code was written by a wizard
 // I am trying to make sense of it
 
-const colors = ['blue', 'green', 'white', 'yellow', 'orange', 'red'];
+const colors = ['orange', 'red', 'white', 'yellow', 'blue', 'green' ];
 const pieces = document.getElementsByClassName('piece');
 
+const faceNames = ['L', 'R', 'U', 'D', 'B', 'F']
 /**
  * FACE INDEX MAPPING
  *  0: left
@@ -106,6 +107,8 @@ function swapPieces(face, times) {
 }
 
 export function turn(face, clockwise) {
+    const faceName = faceNames[face];
+    console.log(`${faceName}${clockwise ? "" : "'"}`)
     animateRotation(face, clockwise, Date.now());
 }
 
@@ -134,13 +137,11 @@ function mousedown(md_e) {
     function mousemove(mm_e) {
         if (face) {
             const piece = face.parentNode;
-            const faceIndex = Array.prototype.indexOf.call(piece.children, face);
-            console.log(faceIndex)
 
             // move
             const selectedAnchor = document.elementFromPoint(mm_e.pageX, mm_e.pageY)
             // the anchorIndex maps to the turnDirection (but the mapping has not been discovered yet)
-            var anchorIndex = selectedAnchor.dataset.anchorIndex;
+            var anchorIndex = selectedAnchor?.dataset?.anchorIndex;
             // selectedAnchor will be the anchor element upon leaving the current sticker
             // gid being 0 is not a problem - it's still truthy because it's a string ("0")
             if (anchorIndex && selectedAnchor.classList.contains('anchor')) {
