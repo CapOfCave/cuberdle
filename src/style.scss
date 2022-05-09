@@ -12,6 +12,11 @@ body {
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
 		"Droid Sans", "Helvetica Neue", sans-serif;
 	color: white;
+
+	&.modal-open {
+		overflow-y: hidden;
+		padding-right: 17px;
+	}
 }
 
 h1 {
@@ -21,8 +26,32 @@ h1 {
 	font-weight: 700;
 }
 
-.title {
-	margin-left: 30px;
+h5 {
+	font-size: 2rem;
+	line-height: 1.5;
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+a {
+	color: #3d9cf7;
+	transition: opacity 0.25s ease 0s;
+	text-decoration: none;
+	&:hover {
+		opacity: 0.8;
+	}
+}
+
+button {
+	background: none;
+	border-style: none;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 30px
 }
 
 .container {
@@ -32,31 +61,67 @@ h1 {
 	background-color: $ground-color;
 }
 
-// .action-button {
-// 	display: inline-block;
-// 	font-weight: 400;
-// 	text-align: center;
-// 	white-space: nowrap;
-// 	vertical-align: middle;
-// 	-webkit-user-select: none;
-// 	-moz-user-select: none;
-// 	-ms-user-select: none;
-// 	user-select: none;
-// 	border: 1px solid transparent;
-// 	border-top-color: transparent;
-// 	border-right-color: transparent;
-// 	border-bottom-color: transparent;
-// 	border-left-color: transparent;
-// 	padding: 0.375rem 0.75rem;
-// 	font-size: 1rem;
-// 	line-height: 1.5;
-// 	border-radius: 0.25rem;
-// 	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-// 		box-shadow 0.15s ease-in-out;
+body.modal-open #modal {
+	display: block;
+}
 
-// 	background-color: $primary;
-// 	color: white;
-// }
+#modal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+	
+}
+
+.modal-dialog {
+	display: none;
+	background-color: #111111;
+	margin: auto;
+	padding: 20px;
+	max-width: 600px;
+	border-radius: 14px;
+	border-style: none;
+
+	&.active-modal {
+		display: block;
+	}
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	padding: 1rem 1rem 1rem 0rem;
+}
+
+.modal-close {
+	background-color: transparent;
+	height: auto;
+	padding: 0.375rem;
+	color: #666666;
+	transition: opacity 0.25s ease 0s;
+
+	&:hover {
+		opacity: 0.8;
+	}
+
+	> svg {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+}
+
+.instruction-row {
+	margin-bottom: 1rem;
+	line-height: 1.5em;
+}
 
 .action-section {
 	display: flex;
@@ -77,7 +142,6 @@ h1 {
 	min-width: 12rem;
 	background-color: $primary;
 	font-size: 0.875rem;
-	border-style: none;
 	border-radius: 12px;
 
 	user-select: none;
@@ -89,7 +153,6 @@ h1 {
 	&:active {
 		transform: scale(0.97);
 	}
-
 }
 
 .guess-section {
@@ -130,6 +193,23 @@ h1 {
 
 	&[data-state="empty"] {
 		background-color: $empty-guess-color;
+	}
+
+	&.move-card-preview {
+		border-radius: 0.1rem;
+		width: 3rem;
+		height: 3rem;
+		margin: 4px;
+		font-size: 1.2rem;
+	}
+
+	&.move-card-preview-small {
+		border-radius: 0.1rem;
+		width: 2rem;
+		height: 2rem;
+		margin: 0;
+		line-height: 2rem;
+		font-size: 0.8rem;
 	}
 }
 
