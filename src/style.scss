@@ -123,6 +123,30 @@ body.modal-open #modal {
 	line-height: 1.5em;
 }
 
+.result-pattern {
+	text-align: center;
+	font-size: 2rem;
+	margin-bottom: 1rem;
+}
+
+.results-modal p {
+	text-align: center;
+	font-size: 1rem;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.results-modal .solution {
+	font-size: 2rem;
+	letter-spacing: 0.05em;
+	font-weight: bold;
+}
+
+.results-modal .action-button {
+	display: block;
+	margin: 1.5rem auto 0 auto;
+}
+
 .action-section {
 	display: flex;
 	justify-content: center;
