@@ -155,6 +155,7 @@ export function turn(face, direction) {
             break;
         case "modified":
             addGuess(lastMoves.length - 1, addMoveResponse.notation);
+            break;
         case "removed":
             removeGuess(lastMoves.length);
     }
