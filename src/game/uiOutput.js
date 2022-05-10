@@ -49,3 +49,10 @@ export function showWinScreen(previousEvaluations, solution) {
     showSolution(solution);
     openModal("winModal")
 }
+
+
+export function showLossScreen(previousEvaluations, solution) {
+    showResultPattern(previousEvaluations);
+    showSolution(solution);
+    openModal("lossModal")
+}

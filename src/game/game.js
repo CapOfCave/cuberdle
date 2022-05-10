@@ -1,6 +1,7 @@
 import { rotate } from '../cube/cubeOutput';
 import { directionsList, EvaluationState } from './constants';
 import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
+import { showWinScreen, showLossScreen  } from './uiOutput';
 import { getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
 
 // ##########
@@ -203,12 +204,12 @@ export function submit() {
         fixateFinalGuess();
         lastMoves = []
         gameOver = true;
-        console.log("wow! nice! you won!")
+        showWinScreen(previousEvaluations, solution);
     } else if (previousGuesses.length >= GUESS_COUNT) {
         fixateFinalGuess();
         lastMoves = []
         gameOver = true;
-        console.log("oh no. You lost. The solution was", solution);
+        showLossScreen(previousEvaluations, solution)
     } else {
         moveToNextGuess();
         clearCube()
