@@ -108,8 +108,14 @@ export function rotate(face, direction, skipAnimation = false) {
             animateRotation(face, false, skipAnimation ? 1 : undefined);
             break;
         case Direction.DOUBLE_MOVE:
-            animateRotation(face, true, skipAnimation ? 1 : 200)
-                .then(() => animateRotation(face, true, skipAnimation ? 1 : 200));
+            if (skipAnimation) {
+                animateRotation(face, true, 1)
+                animateRotation(face, true, 1)
+            } else {
+                animateRotation(face, true, 200)
+                    .then(() => animateRotation(face, true, 200));
+            }
+           
             break;
         default:
             throw new Error(`Unknown direction: ${direction}`)
