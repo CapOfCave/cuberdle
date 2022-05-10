@@ -169,16 +169,16 @@ function revert(moveNotation, skipAnimation = false) {
     rotate(lastMove.face, inversedDirection, skipAnimation);
 }
 
-export function undo() {
+export function undo(skipAnimation) {
     if (lastMoves.length == 0) return;
     const lastMoveNotation = lastMoves.pop();
-    revert(lastMoveNotation);
+    revert(lastMoveNotation, skipAnimation);
     removeGuess(lastMoves.length)
 }
 
 export function clearGuess() {
     while (lastMoves.length > 0) {
-        undo();
+        undo(true);
     }
 }
 
