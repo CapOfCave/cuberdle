@@ -1,15 +1,14 @@
 import { init as inputInit } from './cube/cubeInput';
 import { init as outputInit } from './cube/cubeOutput';
-import { init as initCube } from './game/game';
+import { init as initGame } from './game/game';
 import { clearButtonClicked, randomMoveButtonClicked, submitButtonClicked, undoButtonClicked } from './game/uiInput';
-import { closeModal, openModal, showWinScreen } from './game/uiOutput';
-
+import { closeModal, showInstructions, showWinScreen } from './game/uiOutput';
 import "./style.scss";
 
 function init() {
     inputInit();
     outputInit();
-    initCube();
+    initGame();
 }
 
 init();
@@ -19,6 +18,6 @@ window.actions = {
     submitButtonClicked,
     clearButtonClicked,
     closeModal,
-    openModal,
+    showInstructions,
     showWinScreen,
 }

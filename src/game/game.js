@@ -1,7 +1,7 @@
 import { rotate } from '../cube/cubeOutput';
 import { directionsList, EvaluationState } from './constants';
 import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
-import { showWinScreen, showLossScreen  } from './uiOutput';
+import { showWinScreen, showLossScreen, showInstructions  } from './uiOutput';
 import { getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
 
 // ##########
@@ -217,9 +217,17 @@ export function submit() {
 }
 
 
+function setupInstructions() {
+    if (!window.localStorage.getItem('skipInstructions')) {
+        showInstructions();
+        window.localStorage.setItem('skipInstructions', true)
+    }
+}
+
 function setup() {
     setupGuesses();
     setupCube();
+    setupInstructions();
 }
 
 function setupCube() {

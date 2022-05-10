@@ -56,3 +56,7 @@ export function showLossScreen(previousEvaluations, solution) {
     showSolution(solution);
     openModal("lossModal")
 }
+
+export function showInstructions() {
+    openModal("instructionsModal")
+}

@@ -6,7 +6,7 @@ html(lang="en")
         .container   
             .header 
                 h1.title Cuberdle
-                button.action-button(onclick='window.actions.openModal("instructionsModal")') Help  
+                button.action-button(onclick='window.actions.showInstructions()') Help  
             #preview.preview
                 - var faces = ['left', 'right', 'top', 'bottom', 'back', 'front'], pieces = 26
                 #scene.scene
