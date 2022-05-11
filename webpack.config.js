@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const config = {
     entry: {
@@ -24,18 +25,7 @@ const config = {
             {
                 test: /\.pug$/,
                 use: ['pug-loader']
-            },
-            {
-                test: /\.s[ac]ss$/i,
-                use: [
-                    // Creates `style` nodes from JS strings
-                    "style-loader",
-                    // Translates CSS into CommonJS
-                    "css-loader",
-                    // Compiles Sass to CSS
-                    "sass-loader",
-                ],
-            },
+            }
         ]
     },
     resolve: {
@@ -53,9 +43,25 @@ module.exports = (env, argv) => {
         config.optimization = {
             runtimeChunk: 'single'
         }
+        config.module.rules.push({
+            test: /\.(sa|sc|c)ss$/i,
+            use: [
+                "style-loader",
+                "css-loader",
+                "sass-loader",
+            ],
+        })
     }
     if (argv.mode === 'production') {
-        return { ...config }
+        config.plugins.push(new MiniCssExtractPlugin())
+        config.module.rules.push({
+            test: /\.(sa|sc|c)ss$/i,
+            use: [
+                MiniCssExtractPlugin.loader,
+                "css-loader",
+                "sass-loader",
+            ],
+        })
     }
     return config;
 }
