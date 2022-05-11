@@ -10,7 +10,7 @@ import { getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNum
 const GUESS_COUNT = 5;
 const GUESS_LENGTH = 5;
 
-const ALLOW_DOUBLE_MOVES = false;
+const ALLOW_DOUBLE_MOVES = true;
 
 /**
  * Adds a new Move to the stack, possibly by combining it with the last one that existed
