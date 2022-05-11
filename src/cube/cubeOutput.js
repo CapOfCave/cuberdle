@@ -62,7 +62,12 @@ function swapPieces(face, times) {
 }
 
 // Animates rotation of the face (by clockwise if cw), and then swaps stickers
-function animateRotation(face, cw, duration = 300) {
+function animateRotation(face, cw, skipAnimation, duration = 300) {
+    if (skipAnimation) {
+        swapPieces(face, 3 - 2 * cw);
+        return;
+    }
+
     const currentTime =  Date.now();
 
     // reach 90 degrees after DURATION milliseconds
@@ -102,18 +107,18 @@ function animateRotation(face, cw, duration = 300) {
 export function rotate(face, direction, skipAnimation = false) {
     switch (direction) {
         case Direction.CLOCKWISE:
-            animateRotation(face, true, skipAnimation ? 1 : undefined);
+            animateRotation(face, true, skipAnimation);
             break;
         case Direction.ANTI_CLOCKWISE:
-            animateRotation(face, false, skipAnimation ? 1 : undefined);
+            animateRotation(face, false, skipAnimation);
             break;
         case Direction.DOUBLE_MOVE:
             if (skipAnimation) {
-                animateRotation(face, true, 1)
-                animateRotation(face, true, 1)
+                animateRotation(face, false, skipAnimation)
+                animateRotation(face, false, skipAnimation)
             } else {
-                animateRotation(face, true, 200)
-                    .then(() => animateRotation(face, true, 200));
+                animateRotation(face, false, skipAnimation, 200)
+                    .then(() => animateRotation(face, false, skipAnimation, 200));
             }
            
             break;
