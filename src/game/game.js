@@ -1,6 +1,6 @@
-import { rotate } from '../cube/cubeOutput';
+import { rotate, reset as resetCube } from '../cube/cubeOutput';
 import { directionsList, EvaluationState } from './constants';
-import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
+import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
 import { showWinScreen, showLossScreen, showInstructions  } from './uiOutput';
 import { getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
 
@@ -70,14 +70,14 @@ function initSolution() {
 // # GAME STATE #
 // ##############
 
-const solution = initSolution();
+let solution = initSolution();
 // const solution = [ "L", "D'", "B", "F'", "D"  ];
 // array of ["U", "F'", "D2"...] strings
 let lastMoves = []
 let gameOver = false;
 
-const previousGuesses = [];
-const previousEvaluations = [];
+let previousGuesses = [];
+let previousEvaluations = [];
 
 /**
  * Evaluate a guess by returning it's evaluation array (which contains the strings 'correct', 'present', and 'absent')
@@ -251,6 +251,19 @@ function setupGuesses() {
         const guessSection = document.getElementById("guessSection")
         guessSection.appendChild(guessRow);
     }
+}
+
+export function reset() {
+    resetCube();
+    clearGuesses();
+    lastMoves = [];
+    gameOver = false;
+    previousEvaluations = [];
+    previousGuesses = [];
+
+    solution = initSolution();
+    setupCube();
+
 }
 
 export function init() {

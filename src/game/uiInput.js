@@ -1,5 +1,6 @@
 import { directionsList } from './constants';
-import { turn, undo, submit, clearGuess } from './game';
+import { turn, undo, submit, clearGuess, reset } from './game';
+import { closeModal } from './uiOutput';
 
 export function undoButtonClicked() {
     undo();
@@ -17,4 +18,9 @@ export function randomMoveButtonClicked() {
     // no double moves for now
     const direction = directionsList[Math.floor(Math.random() * 2)];
     turn(Math.floor(Math.random() * 6), direction);
+}
+
+export function playAgain() {
+    reset();
+    closeModal();
 }

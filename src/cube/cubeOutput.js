@@ -1,4 +1,5 @@
 import { Direction } from '../game/constants';
+import { inverseDirection } from '../game/utils';
 import './cube.scss'
 import { mx } from './cubeLib'
 
@@ -17,8 +18,12 @@ import { mx } from './cubeLib'
  *  note that the default view shows orange, which is on the backside 
 */
 
-const colors = ['orange', 'red', 'white', 'yellow', 'blue', 'green' ];
+const colors = ['orange', 'red', 'white', 'yellow', 'blue', 'green'];
 const pieces = document.getElementsByClassName('piece');
+
+// a list of moves that were performed.
+// useful for ressetting the cube state
+const moves = [];
 
 function getAxis(face) {
     return String.fromCharCode('X'.charCodeAt(0) + face / 2); // X, Y or Z
@@ -68,11 +73,11 @@ function animateRotation(face, cw, skipAnimation, duration = 300) {
         return;
     }
 
-    const currentTime =  Date.now();
+    const currentTime = Date.now();
 
     // reach 90 degrees after DURATION milliseconds
     const animationSpeed = 90 / duration
-    
+
     // negative if face is even xor direction is counter-clockwise
     const animationSign = (face % 2 * 2 - 1) * (2 * cw - 1)
 
@@ -85,26 +90,26 @@ function animateRotation(face, cw, skipAnimation, duration = 300) {
         (function rotatePieces() {
             const passed = Date.now() - currentTime
             const style = 'rotate' + getAxis(face) + '(' + animationSign * animationSpeed * passed * (passed < duration) + 'deg)';
-    
+
             qubes.forEach(function (piece) {
                 piece.style.transform = piece.style.transform.replace(/rotate.\(\S+\)/, style);
             });
-    
+
             if (passed >= duration) {
                 swapPieces(face, 3 - 2 * cw);
                 resolve();
                 // ... and stop animation
                 return;
             }
-                
+
             requestAnimationFrame(rotatePieces);
         })();
     })
 
-    
+
 }
 
-export function rotate(face, direction, skipAnimation = false) {
+function _rotate(face, direction, skipAnimation = false) {
     switch (direction) {
         case Direction.CLOCKWISE:
             animateRotation(face, true, skipAnimation);
@@ -120,16 +125,28 @@ export function rotate(face, direction, skipAnimation = false) {
                 animateRotation(face, false, skipAnimation, 200)
                     .then(() => animateRotation(face, false, skipAnimation, 200));
             }
-           
+
             break;
         default:
             throw new Error(`Unknown direction: ${direction}`)
     }
 }
 
+export function rotate(face, direction, skipAnimation = false) {
+    console.log(face, direction)
+    moves.push({ face, direction })
+    _rotate(face, direction, skipAnimation);
+}
+
+export function reset() {
+    while (moves.length > 0) {
+        const move = moves.pop();
+        const inversedDirection = inverseDirection(move.direction)
+        _rotate(move.face, inversedDirection, true);
+    }
+}
 
 
-
-export function init () {
+export function init() {
     window.addEventListener('load', assembleCube);
 }
