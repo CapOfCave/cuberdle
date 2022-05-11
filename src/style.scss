@@ -55,6 +55,12 @@ button {
 	> h1 {
 		margin-right: 1rem;
 	}
+
+	> button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 }
 
 .container {

@@ -133,7 +133,6 @@ function _rotate(face, direction, skipAnimation = false) {
 }
 
 export function rotate(face, direction, skipAnimation = false) {
-    console.log(face, direction)
     moves.push({ face, direction })
     _rotate(face, direction, skipAnimation);
 }
