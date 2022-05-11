@@ -21,6 +21,9 @@ import { mx } from './cubeLib'
 const colors = ['orange', 'red', 'white', 'yellow', 'blue', 'green'];
 const pieces = document.getElementsByClassName('piece');
 
+const FACE_SIZE = 2; // em
+
+
 // a list of moves that were performed.
 // useful for ressetting the cube state
 const moves = [];
@@ -35,7 +38,7 @@ function assembleCube() {
         id = id + (1 << face);
         pieces[i].children[face].appendChild(document.createElement('div'))
             .setAttribute('class', 'sticker ' + colors[face]);
-        return 'translate' + getAxis(face) + '(' + (face % 2 * 4 - 2) + 'em)';
+        return 'translate' + getAxis(face) + '(' + ((face % 2 * 2 - 1) * FACE_SIZE) + 'em)';
     }
     for (var id, x, i = 0; id = 0, i < 26; i++) {
         x = mx(i, i % 18);
