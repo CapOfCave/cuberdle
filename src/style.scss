@@ -1,5 +1,4 @@
 $ground-color: #000000;
-$primary: #0070f3;
 
 $correct-guess-color: #28a745;
 $present-guess-color: #ffc107;
@@ -15,6 +14,10 @@ body {
 		overflow-y: hidden;
 		padding-right: 17px;
 	}
+
+	--primary: #0070f3;
+	--secondary: #9750DD;
+	--error: #F31260;
 }
 
 h1 {
@@ -165,21 +168,35 @@ body.modal-open #modal {
 	}
 }
 
+.action-button.primary {
+	--button-color-primary: var(--primary);
+}
+
+.action-button.error {
+	--button-color-primary: var(--error);
+}
+
+.action-button.secondary {
+	--button-color-primary: var(--secondary);
+}
+
 .action-button {
-	color: white;
 	height: 2.5rem;
 	padding-right: 0.875rem;
 	padding-left: 0.875rem;
 	width: auto;
 	min-width: 12rem;
-	background-color: $primary;
 	font-size: 0.875rem;
 	border-radius: 12px;
-
-	user-select: none;
+	outline-offset: 2px;
+	outline-color: var(--button-color-primary);
 
 	&:hover {
 		opacity: 0.85;
+	}
+
+	&:focus {
+		outline-style: solid;
 	}
 
 	&:active {
@@ -187,12 +204,26 @@ body.modal-open #modal {
 	}
 
 	&:disabled {
-		background-color: #262626;
-		color: #c9c9c9;
 		transform: none;
 		box-shadow: none;
 		pointer-events: none;
 	}
+}
+
+.action-button.solid {
+	color: white;
+	background-color: var(--button-color-primary);
+	&:disabled {
+		background-color: #262626;
+		color: #c9c9c9;
+	}
+}
+
+.action-button.outlined {
+	border-style: solid;
+	border-color: var(--button-color-primary);
+	color: var(--button-color-primary);
+	background-color: transparent;
 }
 
 .guess-section {

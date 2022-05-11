@@ -25,12 +25,11 @@ html(lang="en")
                     while n--
                         div(id = 'anchor' + n data-anchor-index = n class = 'anchor' style = 'transform: translateZ(3px) translateY(-33.33%) rotate(' + (-90 * n) + 'deg) translateY(66.67%)')
             .action-section
-                button.action-button(onclick='window.actions.randomMoveButtonClicked()') Make a random move
-                button.action-button(onclick='window.actions.undoButtonClicked()') Undo previous move
-                button.action-button(onclick='window.actions.clearButtonClicked()') Clear
+                button.action-button.outlined.primary(onclick='window.actions.undoButtonClicked()') Undo previous move
+                button.action-button.outlined.error(onclick='window.actions.clearButtonClicked()') Clear
             #guessSection.guess-section
             .submit-section.action-section
-                button.action-button(onclick='window.actions.submitButtonClicked()') Submit
+                button.action-button.solid.primary(onclick='window.actions.submitButtonClicked()') Submit
         
         //- Modals
         #modal
@@ -65,8 +64,8 @@ html(lang="en")
                 p In hard or expert mode, making the same move twice in a row (e. g. F and F) will be combined into one move (F2).
                 p Good luck and have fun!
                 .action-section
-                    button.action-button(onclick="window.actions.closeModal()") Normal Mode
-                    button.action-button(disabled) Hard Mode (coming soon)
+                    button.action-button.solid.primary(onclick="window.actions.closeModal()") Normal Mode
+                    button.action-button.solid.primary(disabled) Hard Mode (coming soon)
             #winModal.results-modal.modal-dialog
                 .modal-header
                     h5#resultTitle You won!
@@ -76,8 +75,8 @@ html(lang="en")
                 p The solution was
                 p.solution
                 .action-section
-                    button.action-button(onclick="window.actions.playAgain()") Play Again
-                    button.action-button(onclick="window.actions.shareButtonClicked()") Share
+                    button.action-button.solid.primary(onclick="window.actions.playAgain()") Play Again
+                    button.action-button.outlined.primary(onclick="window.actions.shareButtonClicked()") Share
             #lossModal.results-modal.modal-dialog
                 .modal-header
                     h5#resultTitle Better luck next time!
@@ -87,8 +86,8 @@ html(lang="en")
                 p The solution was
                 p.solution
                 .action-section
-                    button.action-button(onclick="window.actions.playAgain()") Play Again
-                    button.action-button(onclick="window.actions.shareButtonClicked()") Share
+                    button.action-button.solid.primary(onclick="window.actions.playAgain()") Play Again
+                    button.action-button.outlined.primary(onclick="window.actions.shareButtonClicked()") Share
 
                     
 
