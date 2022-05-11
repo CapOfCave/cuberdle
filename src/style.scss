@@ -46,10 +46,15 @@ button {
 }
 
 .header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 	margin: 0 30px;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+
+	> h1 {
+		margin-right: 1rem;
+	}
 }
 
 .container {
