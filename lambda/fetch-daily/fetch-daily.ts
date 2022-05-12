@@ -50,7 +50,7 @@ export const handler: Handler = async (event, context) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: `Hello, ${challenges.normal}! Psst... ${DB_CONNECTION_STRING}`,
+      normal: challenges.normal,
     }),
   }
 }
