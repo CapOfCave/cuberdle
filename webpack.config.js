@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
     entry: {
@@ -14,6 +15,11 @@ const config = {
         new HtmlWebpackPlugin({
             template: './src/index.pug'
         }),
+        new CopyWebpackPlugin({
+            patterns: [
+                {from: "public", to: ""}
+            ]
+        })
     ],
     module: {
         rules: [
