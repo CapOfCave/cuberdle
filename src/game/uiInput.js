@@ -1,6 +1,6 @@
 import { directionsList } from './constants';
-import { turn, undo, submit, clearGuess, reset } from './game';
-import { closeModal } from './uiOutput';
+import { turn, undo, submit, clearGuess, reset, createShareText } from './game';
+import { closeModal, shareResults } from './uiOutput';
 
 export function undoButtonClicked() {
     undo();
@@ -23,4 +23,9 @@ export function randomMoveButtonClicked() {
 export function playAgain() {
     reset();
     closeModal();
+}
+
+export function shareButtonClicked() {
+    const text = createShareText();
+    shareResults(text);
 }

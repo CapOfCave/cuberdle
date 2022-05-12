@@ -1,4 +1,4 @@
-import { Direction, DIRECTION_NOTATIONS, faceNames } from "./constants";
+import { Direction, DIRECTION_NOTATIONS, EvaluationState, faceNames } from "./constants";
 
 export function getDirectionNotation(direction) {
     return DIRECTION_NOTATIONS[direction]
@@ -50,6 +50,19 @@ export function mapDirectionToNumber(direction) {
         case 2: return Direction.DOUBLE_MOVE;
         case 3: return Direction.ANTI_CLOCKWISE;
     }
+}
 
 
+const EVALUATION_TO_EMOJI_MAP = {
+    [EvaluationState.CORRECT]: '🟩',
+    [EvaluationState.PRESENT]: '🟨',
+    [EvaluationState.ABSENT]: '⬛'
+};
+
+export function createEmojiPattern(previousEvaluations, separator) {
+    let pattern = ''
+    for (let i = 0; i < previousEvaluations.length; i++) {
+        pattern += previousEvaluations[i].map(res => EVALUATION_TO_EMOJI_MAP[res]).join('') + separator;
+    }
+    return pattern;
 }

@@ -1,18 +1,4 @@
-import { EvaluationState } from "./constants";
-
-const EVALUATION_TO_EMOJI_MAP = {
-    [EvaluationState.CORRECT]: '🟩',
-    [EvaluationState.PRESENT]: '🟨',
-    [EvaluationState.ABSENT]: '⬛'
-};
-
-function createEmojiPattern(previousEvaluations, separator) {
-    let pattern = ''
-    for (let i = 0; i < previousEvaluations.length; i++) {
-        pattern += previousEvaluations[i].map(res => EVALUATION_TO_EMOJI_MAP[res]).join('') + separator;
-    }
-    return pattern;
-}
+import { createEmojiPattern } from "./utils";
 
 export function openModal(modalId) {
     document.body.classList.add("modal-open")
@@ -59,4 +45,21 @@ export function showLossScreen(previousEvaluations, solution) {
 
 export function showInstructions() {
     openModal("instructionsModal")
+}
+
+export function shareResults(text) {
+    navigator.clipboard.writeText(text);
+
+    const tooltips = document.getElementsByClassName("share-tooltip");
+    console.log(tooltips)
+    for (let tooltip of tooltips) {
+        tooltip.classList.add("visible")
+    }
+
+    setTimeout(() => {
+        console.log(tooltips)
+        for (let tooltip of tooltips) {
+            tooltip.classList.remove("visible")
+        }
+    }, 1000)
 }

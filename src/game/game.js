@@ -1,8 +1,8 @@
 import { rotate, reset as resetCube } from '../cube/cubeOutput';
 import { directionsList, EvaluationState } from './constants';
 import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
-import { showWinScreen, showLossScreen, showInstructions  } from './uiOutput';
-import { getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
+import { showWinScreen, showLossScreen, showInstructions } from './uiOutput';
+import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
 
 // ##########
 // # Config #
@@ -19,7 +19,7 @@ const ALLOW_DOUBLE_MOVES = false;
  * Return an array that indicates if the value was appended or the last element was modified/removed 
  * and the notation of the resulting move (if applicable)
  */
- function addMoveToStack(notation, stack) {
+function addMoveToStack(notation, stack) {
     if (stack.length === 0) {
         stack.push(notation);
         return { status: "appended", notation };
@@ -37,12 +37,11 @@ const ALLOW_DOUBLE_MOVES = false;
     const directionValue = mapDirectionToNumber(newMove.direction) + mapDirectionToNumber(previousMove.direction);
     const resultingDirection = mapNumberToDirection(directionValue);
 
-    
     if (resultingDirection === null) {
         stack.pop();
         return { status: "removed" };
     }
-    
+
     if (ALLOW_DOUBLE_MOVES) {
         const resultingMove = getNotation(newMove.face, resultingDirection);
         stack.pop();
@@ -120,7 +119,7 @@ function evaluateGuess(guess, solution) {
     return result;
 }
 
-function isNextMoveOverflowing(face, direction) {   
+function isNextMoveOverflowing(face, direction) {
 
     if (lastMoves.length === 0) {
         return false;
@@ -149,8 +148,8 @@ export function turn(face, direction) {
     const notation = getNotation(face, direction);
     rotate(face, direction);
     const addMoveResponse = addMoveToStack(notation, lastMoves);
-    switch ( addMoveResponse.status ) {
-        case "appended": 
+    switch (addMoveResponse.status) {
+        case "appended":
             addGuess(lastMoves.length - 1, addMoveResponse.notation);
             break;
         case "modified":
@@ -159,7 +158,7 @@ export function turn(face, direction) {
         case "removed":
             removeGuess(lastMoves.length);
     }
-    
+
 }
 
 function revert(moveNotation, skipAnimation = false) {
@@ -263,6 +262,18 @@ export function reset() {
 
     solution = initSolution();
     setupCube();
+
+}
+
+export function createShareText() {
+    let lastGuess = previousEvaluations[previousEvaluations.length - 1];
+    let tries = lastGuess.every(val => val === EvaluationState.CORRECT) ? previousEvaluations.length : 'X';
+
+    return `Cuberdle Random (Normal Difficulty) ${tries}/${GUESS_COUNT}
+${solution.join(', ')}
+
+${createEmojiPattern(previousEvaluations, '\n')}
+https://cuberdle.com`;
 
 }
 

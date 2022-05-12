@@ -1,9 +1,11 @@
 $ground-color: #000000;
 
+$dark-grey: #343a40;
+
 $correct-guess-color: #28a745;
 $present-guess-color: #ffc107;
 $absent-guess-color: #6c757d;
-$empty-guess-color: #343a40;
+$empty-guess-color: $dark-grey;
 
 body {
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
@@ -16,8 +18,8 @@ body {
 	}
 
 	--primary: #0070f3;
-	--secondary: #9750DD;
-	--error: #F31260;
+	--secondary: #9750dd;
+	--error: #f31260;
 }
 
 h1 {
@@ -153,9 +155,8 @@ body.modal-open #modal {
 	font-weight: bold;
 }
 
-.results-modal .action-button {
-	display: block;
-	margin: 1.5rem auto 0 auto;
+.results-modal .action-section {
+	margin: 4rem auto 1rem auto;
 }
 
 .action-section {
@@ -286,4 +287,42 @@ body.modal-open #modal {
 
 .submit-section {
 	margin-top: 20px;
+}
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	background-color: $dark-grey;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 10px;
+	position: absolute;
+	z-index: 1;
+	bottom: 150%;
+	left: 50%;
+	margin-left: -75px;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+// Tooltip Arrow
+.tooltip .tooltiptext::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: $dark-grey transparent transparent transparent;
+}
+
+.tooltip.visible .tooltiptext {
+	visibility: visible;
+	opacity: 1;
 }
