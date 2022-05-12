@@ -9,7 +9,7 @@ import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirectio
 // ##########
 const GUESS_COUNT = 5;
 const GUESS_LENGTH = 5;
-const FETCH_URL = "/.netlify/functions/fetch-daily"
+const FETCH_URL = "http://localhost:8888/.netlify/functions/fetch-daily"
 
 const ALLOW_DOUBLE_MOVES = false;
 
@@ -54,23 +54,11 @@ function addMoveToStack(notation, stack) {
     }
 }
 
-
-function initSolution() {
-    const solution = []
-    while (solution.length < GUESS_LENGTH) {
-        const direction = directionsList[Math.floor(Math.random() * 2)];
-        const face = Math.floor(Math.random() * 6);
-        const notation = getNotation(face, direction)
-        addMoveToStack(notation, solution);
-    }
-    return solution;
-}
-
 // ##############
 // # GAME STATE #
 // ##############
 
-let solution = initSolution();
+let solution;
 // const solution = [ "L", "D'", "B", "F'", "D"  ];
 // array of ["U", "F'", "D2"...] strings
 let lastMoves = []
@@ -228,7 +216,6 @@ function setupInstructions() {
 function setup() {
     fetchDailyChallenge();
     setupGuesses();
-    setupCube();
     setupInstructions();
 }
 

@@ -21,6 +21,14 @@ async function connectToDatabase(): Promise<Db> {
 }
 
 export const handler: Handler = async (event, context) => {
+  
+  const headers = process.env.NODE_ENV === "production" ? {} : {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET'
+  };
+
+
   /* By default, the callback waits until the runtime event loop is empty before freezing the process and returning the results to the caller. Setting this property to false requests that AWS Lambda freeze the process soon after the callback is invoked, even if there are events in the event loop. AWS Lambda will freeze the process, any state data, and the events in the event loop. Any remaining events in the event loop are processed when the Lambda function is next invoked, if AWS Lambda chooses to use the frozen process. */
   context.callbackWaitsForEmptyEventLoop = false;
 
@@ -41,6 +49,7 @@ export const handler: Handler = async (event, context) => {
   if (!challenges || !challenges.normal) {
     return {
       statusCode: 404,
+      headers,
       body: JSON.stringify({
         message: `No data found for this date.`,
       }),
@@ -49,17 +58,9 @@ export const handler: Handler = async (event, context) => {
 
   return {
     statusCode: 200,
+    headers,
     body: JSON.stringify({
       normal: challenges.normal,
     }),
   }
 }
-
-// const { MongoClient, ServerApiVersion } = require('mongodb');
-// const uri = "";
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });
