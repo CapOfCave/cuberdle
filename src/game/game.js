@@ -1,5 +1,5 @@
 import { rotate, reset as resetCube } from '../cube/cubeOutput';
-import { directionsList, EvaluationState } from './constants';
+import { directionsList, EvaluationState, GameState } from './constants';
 import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
 import { showWinScreen, showLossScreen, showInstructions } from './uiOutput';
 import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
@@ -62,7 +62,7 @@ let solution;
 // const solution = [ "L", "D'", "B", "F'", "D"  ];
 // array of ["U", "F'", "D2"...] strings
 let lastMoves = []
-let gameOver = false;
+let gameResult = GameState.ONGOING;
 
 let previousGuesses = [];
 let previousEvaluations = [];
@@ -132,7 +132,7 @@ function isNextMoveOverflowing(face, direction) {
 }
 
 export function turn(face, direction) {
-    if (gameOver) return;
+    if (gameResult !== GameState.ONGOING) return;
     if (isNextMoveOverflowing(face, direction)) return;
     const notation = getNotation(face, direction);
     rotate(face, direction);
@@ -192,12 +192,12 @@ export function submit() {
     if (isAllCorrect(evaluations)) {
         fixateFinalGuess();
         lastMoves = []
-        gameOver = true;
+        gameResult = GameState.WIN;
         showWinScreen(previousEvaluations, solution);
     } else if (previousGuesses.length >= GUESS_COUNT) {
         fixateFinalGuess();
         lastMoves = []
-        gameOver = true;
+        gameResult = GameState.LOSS;
         showLossScreen(previousEvaluations, solution)
     } else {
         moveToNextGuess();
@@ -245,11 +245,11 @@ function setSolution(newSolution) {
     resetCube();
     clearGuesses();
     lastMoves = [];
-    gameOver = false;
+    gameResult = GameState.ONGOING;
     previousEvaluations = [];
     previousGuesses = [];
 
-    solution = newSolution
+    solution = newSolution;
     setupCube();
 }
 
