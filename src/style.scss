@@ -305,7 +305,7 @@ body.modal-open #modal {
 	z-index: 1;
 	bottom: 150%;
 	left: 50%;
-	margin-left: -75px;
+	margin-left: -5.5rem;
 	opacity: 0;
 	transition: opacity 0.3s;
 }
@@ -323,6 +323,11 @@ body.modal-open #modal {
 }
 
 .tooltip.visible .tooltiptext {
+	visibility: visible;
+	opacity: 1;
+}
+
+.tooltip.hover-tooltip:hover .tooltiptext {
 	visibility: visible;
 	opacity: 1;
 }

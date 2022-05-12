@@ -22,6 +22,5 @@ window.actions = {
     closeModal,
     showInstructions,
     showWinScreen,
-    playAgain,
     shareButtonClicked,
 }

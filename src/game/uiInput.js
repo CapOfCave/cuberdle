@@ -20,11 +20,6 @@ export function randomMoveButtonClicked() {
     turn(Math.floor(Math.random() * 6), direction);
 }
 
-export function playAgain() {
-    reset();
-    closeModal();
-}
-
 export function shareButtonClicked() {
     const text = createShareText();
     shareResults(text);

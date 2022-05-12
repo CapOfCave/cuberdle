@@ -241,10 +241,6 @@ function setupGuesses() {
     }
 }
 
-export function reset() {
-    setSolution(initSolution())
-}
-
 function setSolution(newSolution) {
     resetCube();
     clearGuesses();
