@@ -9,6 +9,7 @@ import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirectio
 // ##########
 const GUESS_COUNT = 5;
 const GUESS_LENGTH = 5;
+const FETCH_URL = "/.netlify/functions/fetch-daily"
 
 const ALLOW_DOUBLE_MOVES = false;
 
@@ -225,6 +226,7 @@ function setupInstructions() {
 }
 
 function setup() {
+    fetchDailyChallenge();
     setupGuesses();
     setupCube();
     setupInstructions();
@@ -253,6 +255,10 @@ function setupGuesses() {
 }
 
 export function reset() {
+    setSolution(initSolution())
+}
+
+function setSolution(newSolution) {
     resetCube();
     clearGuesses();
     lastMoves = [];
@@ -260,9 +266,15 @@ export function reset() {
     previousEvaluations = [];
     previousGuesses = [];
 
-    solution = initSolution();
+    solution = newSolution
     setupCube();
+}
 
+function fetchDailyChallenge() {
+    fetch(FETCH_URL)
+        .then(response => response.json())
+        .then(challenges => challenges.normal)
+        .then(result => setSolution(result));
 }
 
 export function createShareText() {
