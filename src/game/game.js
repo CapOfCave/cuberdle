@@ -1,6 +1,6 @@
 import { rotate, reset as resetCube } from '../cube/cubeOutput';
 import { directionsList, EvaluationState, GameState } from './constants';
-import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
+import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
 import { showWinScreen, showLossScreen, showInstructions } from './uiOutput';
 import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
 
@@ -203,6 +203,7 @@ export function submit() {
         moveToNextGuess();
         clearCube()
     }
+    updateLocalStorage();
 }
 
 
@@ -214,9 +215,13 @@ function setupInstructions() {
 }
 
 function setup() {
-    fetchDailyChallenge();
     setupGuesses();
     setupInstructions();
+    if (window.localStorage.getItem("daily_solution")) {
+        loadFromLocalStorage();
+    } else {
+        fetchDailyChallenge();
+    }
 }
 
 function setupCube() {
@@ -250,6 +255,7 @@ function setSolution(newSolution) {
     previousGuesses = [];
 
     solution = newSolution;
+    updateLocalStorage();
     setupCube();
 }
 
@@ -258,6 +264,43 @@ function fetchDailyChallenge() {
         .then(response => response.json())
         .then(challenges => challenges.normal)
         .then(result => setSolution(result));
+}
+
+function updateLocalStorage() {
+    window.localStorage.setItem("daily_solution", JSON.stringify(solution));
+    window.localStorage.setItem("daily_gameState", gameResult);
+    window.localStorage.setItem("daily_guesses", JSON.stringify(previousGuesses));
+    window.localStorage.setItem("daily_evaluations", JSON.stringify(previousEvaluations)); 
+}
+
+// TODO cleanup :)
+function loadFromLocalStorage() {
+    const localSolution = JSON.parse(window.localStorage.getItem("daily_solution"));
+    if (!localSolution) {
+        return false;
+    }
+
+    solution = localSolution;
+    setupCube();
+
+    const localGameResult = window.localStorage.getItem("daily_gameState");
+    const localPreviousGuesses = JSON.parse(window.localStorage.getItem("daily_guesses"));
+    const localPreviousEvaluations = JSON.parse(window.localStorage.getItem("daily_evaluations"));
+
+    previousGuesses = localPreviousGuesses ?? []
+    previousEvaluations = localPreviousEvaluations ?? []
+
+    setGuessesAndEvaluation(previousGuesses, previousEvaluations, localGameResult === GameState.LOSS || localGameResult === GameState.WIN);
+
+    if (localGameResult === GameState.LOSS) {
+        showLossScreen(previousEvaluations, localSolution);
+        gameResult = localGameResult;
+    } else if (localGameResult === GameState.WIN) {
+        showWinScreen(previousEvaluations, localSolution);
+        gameResult = localGameResult;
+    } else {
+        gameResult = GameState.ONGOING;
+    }
 }
 
 export function createShareText() {
