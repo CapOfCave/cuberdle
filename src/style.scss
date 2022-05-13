@@ -343,3 +343,9 @@ body.modal-open #modal {
 	visibility: visible;
 	opacity: 1;
 }
+
+.footer {
+	display: flex;
+	justify-content: center;
+	margin-top: 3rem;
+}
