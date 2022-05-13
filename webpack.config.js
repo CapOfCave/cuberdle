@@ -41,11 +41,6 @@ const config = {
             }
         ]
     },
-    optimization: {
-        splitChunks: {
-            chunks: "all",
-        },
-    },
     resolve: {
         extensions: ['*', '.js']
     },
@@ -72,6 +67,11 @@ module.exports = (env, argv) => {
     }
     if (argv.mode === 'production') {
         config.plugins.push(new MiniCssExtractPlugin())
+        config.optimization = {
+            splitChunks: {
+                chunks: "all",
+            },
+        },
         config.module.rules.push({
             test: /\.(sa|sc|c)ss$/i,
             use: [

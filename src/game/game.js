@@ -9,7 +9,6 @@ import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirectio
 // ##########
 const GUESS_COUNT = 5;
 const GUESS_LENGTH = 5;
-const FETCH_URL = "http://localhost:8888/.netlify/functions/fetch-daily"
 
 const ALLOW_DOUBLE_MOVES = false;
 
@@ -214,17 +213,12 @@ function setupInstructions() {
     }
 }
 
-function setup() {
+export function setup() {
     setupGuesses();
     setupInstructions();
-    if (window.localStorage.getItem("daily_solution")) {
-        loadFromLocalStorage();
-    } else {
-        fetchDailyChallenge();
-    }
 }
 
-function setupCube() {
+export function setupCube() {
     [...solution].reverse().forEach(notation => revert(notation, true))
 }
 
@@ -246,7 +240,8 @@ function setupGuesses() {
     }
 }
 
-function setSolution(newSolution) {
+export function setSolution(newSolution) {
+    console.log(newSolution)
     resetCube();
     clearGuesses();
     lastMoves = [];
@@ -259,13 +254,6 @@ function setSolution(newSolution) {
     setupCube();
 }
 
-function fetchDailyChallenge() {
-    fetch(FETCH_URL)
-        .then(response => response.json())
-        .then(challenges => challenges.normal)
-        .then(result => setSolution(result));
-}
-
 function updateLocalStorage() {
     window.localStorage.setItem("daily_solution", JSON.stringify(solution));
     window.localStorage.setItem("daily_gameState", gameResult);
@@ -274,7 +262,7 @@ function updateLocalStorage() {
 }
 
 // TODO cleanup :)
-function loadFromLocalStorage() {
+export function loadFromLocalStorage() {
     const localSolution = JSON.parse(window.localStorage.getItem("daily_solution"));
     if (!localSolution) {
         return false;
