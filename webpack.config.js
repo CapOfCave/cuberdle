@@ -5,8 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
     entry: {
-        main: './src/index.js',
-        practice: './src/practice.js',
+        main: './src/pages/daily/index.js',
+        practice: './src/pages/practice/index.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -14,11 +14,11 @@ const config = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.pug',
+            template: './src/pages/daily/index.pug',
             chunks: ["main"]
         }),
         new HtmlWebpackPlugin({
-            template: './src/pages/practice.pug',
+            template: './src/pages/practice/index.pug',
             filename: 'practice.html',
             chunks: ['practice']
         }),
