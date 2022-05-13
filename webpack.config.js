@@ -24,7 +24,7 @@ const config = {
         }),
         new CopyWebpackPlugin({
             patterns: [
-                {from: "public", to: ""}
+                { from: "public", to: "" }
             ]
         })
     ],
@@ -40,6 +40,11 @@ const config = {
                 use: ['pug-loader']
             }
         ]
+    },
+    optimization: {
+        splitChunks: {
+            chunks: "all",
+        },
     },
     resolve: {
         extensions: ['*', '.js']
