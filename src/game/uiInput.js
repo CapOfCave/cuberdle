@@ -1,6 +1,5 @@
 import { directionsList } from './constants';
-import { turn, undo, submit, clearGuess, reset, createShareText } from './game';
-import { closeModal, shareResults } from './uiOutput';
+import { turn, undo, submit, clearGuess } from './game';
 
 export function undoButtonClicked() {
     undo();
@@ -20,7 +19,3 @@ export function randomMoveButtonClicked() {
     turn(Math.floor(Math.random() * 6), direction);
 }
 
-export function shareButtonClicked() {
-    const text = createShareText();
-    shareResults(text);
-}

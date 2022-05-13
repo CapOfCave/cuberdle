@@ -198,16 +198,12 @@ export function loadFromLocalStorage() {
     puzzleId = window.localStorage.getItem("daily_puzzleId", puzzleId);
 }
 
-export function createShareText() {
-    let lastGuess = previousEvaluations[previousEvaluations.length - 1];
-    let tries = lastGuess.every(val => val === EvaluationState.CORRECT) ? previousEvaluations.length : 'X';
-
-    return `Cuberdle Random (Normal Difficulty) ${tries}/${GUESS_COUNT}
-${solution.join(', ')}
-
-${createEmojiPattern(previousEvaluations, '\n')}
-https://cuberdle.com`;
-
+export function getGameState() {
+    return {
+        previousEvaluations,
+        config,
+        solution,
+    }
 }
 
 export function init() {

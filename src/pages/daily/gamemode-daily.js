@@ -1,6 +1,6 @@
 import { loadFromLocalStorage, setPuzzleId, setSaveToLocalStorage, setSolution, setup as setupGame } from '../../game/game';
 
-const FETCH_URL = "http://localhost:8888/.netlify/functions/fetch-daily"
+const FETCH_URL = "/.netlify/functions/fetch-daily"
 
 function fetchDailyChallenge() {
     return fetch(FETCH_URL)
