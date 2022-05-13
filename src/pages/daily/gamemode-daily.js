@@ -5,7 +5,6 @@ const FETCH_URL = "/.netlify/functions/fetch-daily"
 function fetchDailyChallenge() {
     return fetch(FETCH_URL)
         .then(response => response.json())
-        .then(r => { console.log(r); return r })
 }
 
 function loadRelevantPuzzle(fetchPuzzleId, fetchSolution) {
