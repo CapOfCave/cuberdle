@@ -1,0 +1,107 @@
+doctype html
+html(lang="en")
+    head
+        title Cuberdle
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        meta(name="description" content="Cuberdle - A Wordle-inspired game where you are trying to solve a Rubik's Cube in a given move count")
+        link(rel="icon" type="image/svg+xml" href="favicon.svg")
+    body
+        .container   
+            .header 
+                h1.title Cuberdle Practice
+                button(onclick='window.actions.showInstructions()')
+                    <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="#FFFFFF" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 400c-18 0-32-14-32-32s13.1-32 32-32c17.1 0 32 14 32 32S273.1 400 256 400zM325.1 258L280 286V288c0 13-11 24-24 24S232 301 232 288V272c0-8 4-16 12-21l57-34C308 213 312 206 312 198C312 186 301.1 176 289.1 176h-51.1C225.1 176 216 186 216 198c0 13-11 24-24 24s-24-11-24-24C168 159 199 128 237.1 128h51.1C329 128 360 159 360 198C360 222 347 245 325.1 258z"/></svg>
+
+            #preview.preview
+                - var faces = ['left', 'right', 'top', 'bottom', 'back', 'front'], pieces = 26
+                #scene.scene
+                    #pivot.pivot.centered(style = 'transform: rotateX(-35deg) rotateY(-35deg);')
+                        #cube.cube
+                            while pieces--
+                                .piece
+                                    each face in faces
+                                        div(class = 'face ' + face)
+                #guide
+                    - var n = 4
+                    while n--
+                        div(id = 'anchor' + n data-anchor-index = n class = 'anchor' style = 'transform: translateZ(3px) translateY(-33.33%) rotate(' + (-90 * n) + 'deg) translateY(66.67%)')
+            .action-section
+                button.action-button.outlined.primary(onclick='window.actions.undoButtonClicked()') Undo previous move
+                button.action-button.outlined.error(onclick='window.actions.clearButtonClicked()') Clear
+            #guessSection.guess-section
+            .submit-section.action-section
+                button.action-button.solid.primary(onclick='window.actions.submitButtonClicked()') Submit
+        
+        //- Modals
+        #modal
+            #instructionsModal.modal-dialog
+                .modal-header
+                    h5 Instructions
+                    button.modal-close(onclick="window.actions.closeModal()")
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nextui-modal-close-icon-svg" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                p Turn the cube to find the turning sequence that solves the cube in the given number of moves!
+                p 
+                    span All moves are tracked using 
+                    a(href="https://ruwix.com/the-rubiks-cube/notation/" target="_blank" rel="noopener noreferrer") Rubik's Cube Notation
+                    span . 
+                p Example:
+                div
+                    .move-card.move-card-preview(data-state="present") F 
+                    .move-card.move-card-preview(data-state="absent") R 
+                    .move-card.move-card-preview(data-state="absent") U 
+                    .move-card.move-card-preview(data-state="correct") R' 
+                    .move-card.move-card-preview(data-state="absent") U' 
+                p Upon submitting, the moves are highlighted as follows:
+                .instruction-row
+                    .move-card.move-card.move-card-preview-small(data-state="correct") R' 
+                    span &nbsp;means that R' is the fourth move of the solve. There may or may not be additional R' moves in the final solution.
+                .instruction-row 
+                    .move-card.move-card-preview-small(data-state="present") F
+                    span &nbsp;means that F is found at least once in the final solution, but not at position 1.
+                .instruction-row 
+                    .move-card.move-card-preview-small(data-state="absent") R
+                    span &nbsp;means that R does not occur in the final solution.
+                p Adjacent opposite moves (e. g. R and R') cancel out and won't count towards the solution. 
+                p In hard or expert mode, making the same move twice in a row (e. g. F and F) will be combined into one move (F2).
+                p Good luck and have fun!
+                .action-section
+                    button.action-button.solid.primary(onclick="window.actions.closeModal()") Normal Mode
+                    button.action-button.solid.primary(disabled) Hard Mode (coming soon)
+            #winModal.results-modal.modal-dialog
+                .modal-header
+                    h5#resultTitle You won!
+                    button.modal-close(onclick="window.actions.closeModal()")
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nextui-modal-close-icon-svg" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                .result-pattern
+                p The solution was
+                p.solution
+                .action-section
+                    .share-tooltip.tooltip
+                        span.tooltiptext Copied to Clipboard!
+                        button.action-button.outlined.primary(onclick="window.actions.shareButtonClicked()") Share
+                    .tooltip.hover-tooltip
+                        span.tooltiptext Come back tomorrow!
+                        button.action-button.solid.primary(disabled) Play Again
+            #lossModal.results-modal.modal-dialog
+                .modal-header
+                    h5#resultTitle Better luck next time!
+                    button.modal-close(onclick="window.actions.closeModal()")
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nextui-modal-close-icon-svg" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                .result-pattern
+                p The solution was
+                p.solution
+                .action-section
+                    .share-tooltip.tooltip
+                        span.tooltiptext Copied to Clipboard!
+                        button.action-button.outlined.primary(onclick="window.actions.shareButtonClicked()") Share
+                    .tooltip.hover-tooltip
+                        span.tooltiptext Come back tomorrow!
+                        button.action-button.solid.primary(disabled) Play Again
+
+                    
+
+                    
+
+               
+               
+
