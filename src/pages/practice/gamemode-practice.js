@@ -2,7 +2,7 @@ import { directionsList } from '../../game/constants';
 import { setSaveToLocalStorage, setSolution, setup as setupGame } from '../../game/game';
 import { addMoveToStack } from '../../game/gameLogic';
 import { closeModal } from '../../game/uiOutput';
-import { getNotation } from '../../game/utils';
+import { getNotation } from '../../game/notation';
 
 const GUESS_LENGTH = 5;
 const ALLOW_DOUBLE_MOVES = false;

@@ -2,8 +2,9 @@ import { reset as resetCube, rotate } from '../cube/cubeOutput';
 import { EvaluationState, GameState } from './constants';
 import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
 import { showInstructions, showLossScreen, showWinScreen } from './uiOutput';
-import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection } from './utils';
+import { createEmojiPattern, inverseDirection } from './utils';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic' 
+import { getNotation, getObjectFromNotation } from './notation'
 // ##########
 // # Config #
 // ##########

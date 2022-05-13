@@ -1,5 +1,4 @@
-type FaceNotation = 'L' | 'R' | 'U' | 'D' | 'B' | 'F';
-type DirectionNotation = '' | "'" | '2';
+import { DirectionNotation, FaceNotation } from "./notation";
 
 export const faceNames: FaceNotation[] = ['L', 'R', 'U', 'D', 'B', 'F']
 
@@ -10,12 +9,6 @@ export enum Direction {
 }
 
 export const directionsList = [Direction.CLOCKWISE, Direction.ANTI_CLOCKWISE, Direction.DOUBLE_MOVE];
-
-export const DIRECTION_NOTATIONS: {[key in Direction]: DirectionNotation} = {
-    [Direction.CLOCKWISE]: '',
-    [Direction.ANTI_CLOCKWISE]: "'",
-    [Direction.DOUBLE_MOVE]: '2',
-}
 
 export enum EvaluationState {
     CORRECT = 'correct', // green
