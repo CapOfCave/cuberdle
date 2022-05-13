@@ -1,6 +1,12 @@
 doctype html
 html(lang="en")
-    include ../../includes/head.pug
+    head
+        meta(charset="utf-8")
+        title Cuberdle
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        meta(name="description" content="Cuberdle - A Wordle-inspired game where you are trying to solve a Rubik's Cube in a given move count")
+        link(rel="icon" type="image/svg+xml" href="favicon.ico")
+        meta(property="og:image" content="/cuberdle_banner.png")
     body
         .container   
             .header 
@@ -12,8 +18,19 @@ html(lang="en")
                     button.action-button.solid.primary(disabled) Daily 
                     button.action-button.outlined.primary(onclick="location.href='/practice'") Practice 
 
-            include ../../includes/cube.pug
-
+            #preview.preview
+                - var faces = ['left', 'right', 'top', 'bottom', 'back', 'front'], pieces = 26
+                #scene.scene
+                    #pivot.pivot.centered(style = 'transform: rotateX(-35deg) rotateY(-35deg);')
+                        #cube.cube
+                            while pieces--
+                                .piece
+                                    each face in faces
+                                        div(class = 'face ' + face)
+                #guide
+                    - var n = 4
+                    while n--
+                        div(id = 'anchor' + n data-anchor-index = n class = 'anchor' style = 'transform: translateZ(3px) translateY(-33.33%) rotate(' + (-90 * n) + 'deg) translateY(66.67%)')
             .action-section
                 button.action-button.outlined.primary(onclick='window.actions.undoButtonClicked()') Undo previous move
                 button.action-button.outlined.error(onclick='window.actions.clearButtonClicked()') Clear
