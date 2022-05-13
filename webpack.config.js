@@ -30,6 +30,19 @@ const config = {
     ],
     module: {
         rules: [
+
+            // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
+            {
+                test: /\.(j|t)s$/,
+                exclude: /node_modules/,
+                loader: "ts-loader"
+
+            },
+            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+            {
+                test: /\.js$/,
+                loader: "source-map-loader"
+            },
             {
                 test: /\.(js)$/,
                 exclude: /node_modules/,
@@ -42,7 +55,7 @@ const config = {
         ]
     },
     resolve: {
-        extensions: ['*', '.js']
+        extensions: ['*', '.js', '.ts',]
     },
 };
 
@@ -55,7 +68,7 @@ module.exports = (env, argv) => {
             historyApiFallback: {
                 rewrites: [
                     { from: /^\/practice/, to: '/practice.html' },
-                  ],
+                ],
             }
         }
         config.optimization = {
@@ -69,6 +82,7 @@ module.exports = (env, argv) => {
                 "sass-loader",
             ],
         })
+        config.devtool = "source-map";
     }
     if (argv.mode === 'production') {
         config.plugins.push(new MiniCssExtractPlugin())
@@ -77,14 +91,14 @@ module.exports = (env, argv) => {
                 chunks: "all",
             },
         },
-        config.module.rules.push({
-            test: /\.(sa|sc|c)ss$/i,
-            use: [
-                MiniCssExtractPlugin.loader,
-                "css-loader",
-                "sass-loader",
-            ],
-        })
+            config.module.rules.push({
+                test: /\.(sa|sc|c)ss$/i,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "sass-loader",
+                ],
+            })
     }
     return config;
 }

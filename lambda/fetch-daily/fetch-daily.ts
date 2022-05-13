@@ -1,5 +1,4 @@
 import { Handler } from '@netlify/functions';
-import moment from 'moment';
 import { Db, MongoClient } from 'mongodb';
 
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'mongodb://localhost:27017';
