@@ -1,5 +1,6 @@
-import { EvaluationState } from "./constants";
-import { getNotation, getObjectFromNotation } from "./notation";
+import { Direction, EvaluationState } from "./constants";
+import { getNotation, getObjectFromNotation, Notation } from "./notation";
+import { GameConfig, Guess } from "./types";
 import { mapDirectionToNumber, mapNumberToDirection } from "./utils";
 
 /**
@@ -7,7 +8,7 @@ import { mapDirectionToNumber, mapNumberToDirection } from "./utils";
  * 
  * Guess and solution must look like this: ["U", "F'", "D2"...]
  */
- export function evaluateGuess(guess, solution) {
+ export function evaluateGuess(guess: Guess, solution: Guess) {
     if (guess.length != solution.length) throw new Error("Guess length must be same as solution length");
 
     // create a map of move -> remaining occurences
@@ -43,7 +44,7 @@ import { mapDirectionToNumber, mapNumberToDirection } from "./utils";
     return result;
 }
 
-export function isNextMoveOverflowing(face, direction, lastMoves, gameConfig) {
+export function isNextMoveOverflowing(face: number, direction: Direction, lastMoves: Notation[], gameConfig: GameConfig) {
 
     if (lastMoves.length === 0) {
         return false;
@@ -70,7 +71,7 @@ export function isNextMoveOverflowing(face, direction, lastMoves, gameConfig) {
  * Return an array that indicates if the value was appended or the last element was modified/removed 
  * and the notation of the resulting move (if applicable)
  */
- export function addMoveToStack(notation, stack, allowDoubleMoves) {
+ export function addMoveToStack(notation: Notation, stack: Notation[], allowDoubleMoves: boolean) {
     if (stack.length === 0) {
         stack.push(notation);
         return { status: "appended", notation };

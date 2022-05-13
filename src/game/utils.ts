@@ -1,4 +1,5 @@
-import { Direction, EvaluationState, faceNames } from "./constants";
+import { Direction, EvaluationState } from "./constants";
+import { Evaluation } from "./types";
 
 
 export function inverseDirection(direction: Direction) {
@@ -40,7 +41,7 @@ const EVALUATION_TO_EMOJI_MAP = {
     [EvaluationState.ABSENT]: '⬛'
 };
 
-export function createEmojiPattern(previousEvaluations, separator) {
+export function createEmojiPattern(previousEvaluations: Evaluation[], separator: string) {
     let pattern = ''
     for (let i = 0; i < previousEvaluations.length; i++) {
         pattern += previousEvaluations[i].map(res => EVALUATION_TO_EMOJI_MAP[res]).join('') + separator;

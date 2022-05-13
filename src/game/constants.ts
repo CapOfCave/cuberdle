@@ -1,4 +1,4 @@
-import { DirectionNotation, FaceNotation } from "./notation";
+import { FaceNotation } from "./notation";
 
 export const faceNames: FaceNotation[] = ['L', 'R', 'U', 'D', 'B', 'F']
 
