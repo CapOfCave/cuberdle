@@ -2,8 +2,8 @@ import { reset as resetCube, rotate } from '../cube/cubeOutput';
 import { EvaluationState, GameState } from './constants';
 import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
 import { showInstructions, showLossScreen, showWinScreen } from './uiOutput';
-import { addMoveToStack, createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection } from './utils';
-
+import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection } from './utils';
+import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic' 
 // ##########
 // # Config #
 // ##########
@@ -11,6 +11,12 @@ const GUESS_COUNT = 5;
 const GUESS_LENGTH = 5;
 
 const ALLOW_DOUBLE_MOVES = false;
+
+const config = {
+    guessCount: GUESS_COUNT,
+    guessLength: GUESS_LENGTH,
+    allowDoubleMoves: ALLOW_DOUBLE_MOVES,
+}
 
 // ##############
 // # GAME STATE #
@@ -30,73 +36,9 @@ let saveToLocalStorage = false;
 // TODO move to daily
 let puzzleId = null;
 
-/**
- * Evaluate a guess by returning it's evaluation array (which contains the strings 'correct', 'present', and 'absent')
- * 
- * Guess and solution must look like this: ["U", "F'", "D2"...]
- */
-function evaluateGuess(guess, solution) {
-    if (guess.length != solution.length) throw new Error("Guess length must be same as solution length");
-
-    // create a map of move -> remaining occurences
-    const remainingOccurencesOfMove = {};
-    for (let element of solution) {
-        if (element in remainingOccurencesOfMove) {
-            remainingOccurencesOfMove[element]++;
-        } else {
-            remainingOccurencesOfMove[element] = 1;
-        }
-    }
-
-    const result = new Array(solution.length).fill(EvaluationState.ABSENT);
-
-    // Step 1: Get green values
-    for (let i = 0; i < solution.length; i++) {
-        if (guess[i] === solution[i]) {
-            result[i] = EvaluationState.CORRECT
-            remainingOccurencesOfMove[guess[i]]--;
-        }
-    }
-
-    // Step 2: Get yellow values
-    for (let i = 0; i < solution.length; i++) {
-        if (result[i] !== EvaluationState.ABSENT) continue;
-
-        const guessedMove = guess[i];
-        if (remainingOccurencesOfMove[guessedMove] > 0) {
-            result[i] = EvaluationState.PRESENT;
-            remainingOccurencesOfMove[guess[i]]--;
-        }
-    }
-    return result;
-}
-
-function isNextMoveOverflowing(face, direction) {
-
-    if (lastMoves.length === 0) {
-        return false;
-    }
-
-    const last = getObjectFromNotation(lastMoves[lastMoves.length - 1])
-
-    if (ALLOW_DOUBLE_MOVES && face === last.face) {
-        // with double moves, all moves of the same face will combine
-        return false;
-    }
-
-
-    if (!ALLOW_DOUBLE_MOVES && face === last.face && direction !== last.direction) {
-        // without double moves, only moves in opposite directions will combine
-        // since there are no double moves, all different moves will be opposite moves
-        return false;
-    }
-    return lastMoves.length >= GUESS_LENGTH;
-
-}
-
 export function turn(face, direction) {
     if (gameResult !== GameState.ONGOING) return;
-    if (isNextMoveOverflowing(face, direction)) return;
+    if (isNextMoveOverflowing(face, direction, lastMoves, config)) return;
     const notation = getNotation(face, direction);
     rotate(face, direction);
     const addMoveResponse = addMoveToStack(notation, lastMoves, ALLOW_DOUBLE_MOVES);
@@ -110,7 +52,6 @@ export function turn(face, direction) {
         case "removed":
             removeGuess(lastMoves.length);
     }
-
 }
 
 function revert(moveNotation, skipAnimation = false) {
