@@ -2,7 +2,7 @@ import { rotate, reset as resetCube } from '../cube/cubeOutput';
 import { directionsList, EvaluationState, GameState } from './constants';
 import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
 import { showWinScreen, showLossScreen, showInstructions } from './uiOutput';
-import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
+import { addMoveToStack, createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
 
 // ##########
 // # Config #
@@ -11,47 +11,6 @@ const GUESS_COUNT = 5;
 const GUESS_LENGTH = 5;
 
 const ALLOW_DOUBLE_MOVES = false;
-
-/**
- * Adds a new Move to the stack, possibly by combining it with the last one that existed
- * Does NOT check if the lastMoves array overflows! This should be checked elsewhere.
- * 
- * Return an array that indicates if the value was appended or the last element was modified/removed 
- * and the notation of the resulting move (if applicable)
- */
-function addMoveToStack(notation, stack) {
-    if (stack.length === 0) {
-        stack.push(notation);
-        return { status: "appended", notation };
-    }
-
-    const newMove = getObjectFromNotation(notation);
-    const previousMoveNotation = stack[stack.length - 1];
-
-    const previousMove = getObjectFromNotation(previousMoveNotation);
-    if (previousMove.face !== newMove.face) {
-        stack.push(notation);
-        return { status: "appended", notation };
-    }
-
-    const directionValue = mapDirectionToNumber(newMove.direction) + mapDirectionToNumber(previousMove.direction);
-    const resultingDirection = mapNumberToDirection(directionValue);
-
-    if (resultingDirection === null) {
-        stack.pop();
-        return { status: "removed" };
-    }
-
-    if (ALLOW_DOUBLE_MOVES) {
-        const resultingMove = getNotation(newMove.face, resultingDirection);
-        stack.pop();
-        stack.push(resultingMove);
-        return { status: "modified", notation: resultingMove };
-    } else {
-        stack.push(notation);
-        return { status: "appended", notation };
-    }
-}
 
 // ##############
 // # GAME STATE #
@@ -135,7 +94,7 @@ export function turn(face, direction) {
     if (isNextMoveOverflowing(face, direction)) return;
     const notation = getNotation(face, direction);
     rotate(face, direction);
-    const addMoveResponse = addMoveToStack(notation, lastMoves);
+    const addMoveResponse = addMoveToStack(notation, lastMoves, ALLOW_DOUBLE_MOVES);
     switch (addMoveResponse.status) {
         case "appended":
             addGuess(lastMoves.length - 1, addMoveResponse.notation);
