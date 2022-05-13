@@ -1,5 +1,4 @@
-import "../../defaults.scss";
-import "../../style.scss";
+import '../../styles/styles'
 
 import { init as inputInit } from '../../cube/cubeInput';
 import { init as outputInit } from '../../cube/cubeOutput';

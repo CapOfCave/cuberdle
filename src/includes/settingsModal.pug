@@ -1,6 +1,15 @@
-#settingsModal.results-modal.modal-dialog
+#settingsModal.modal-dialog
     .modal-header
         h5#resultTitle Settings
         include ./closeModal.pug        
-    p Currently, there are no Settings :(
-        
+
+    h3 Cube Control Mode
+    label.radio-container
+        span GelatinBrain 
+        input(type="radio" checked="checked" name="myradio")
+        span.checkmark 
+    label.radio-container
+        span Click-And-Drag 
+        input(type="radio" checked="checked" name="myradio")
+        span.checkmark 
+         

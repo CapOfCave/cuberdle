@@ -2,9 +2,14 @@ doctype html
 html(lang="en")
     include ../../includes/head.pug
     body
-        .container   
-            include ../../includes/headerNav.pug
+        .container
+            .header 
+                include ../../includes/titleSection.pug
+                nav.game-mode-nav
+                    button.action-button.solid.primary(disabled) Daily 
+                    button.action-button.outlined.primary(onclick="location.href='/practice'") Practice    
             
+
             include ../../includes/cube.pug
 
             .action-section
