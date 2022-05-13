@@ -66,3 +66,44 @@ export function createEmojiPattern(previousEvaluations, separator) {
     }
     return pattern;
 }
+
+/**
+ * Adds a new Move to the stack, possibly by combining it with the last one that existed
+ * Does NOT check if the lastMoves array overflows! This should be checked elsewhere.
+ * 
+ * Return an array that indicates if the value was appended or the last element was modified/removed 
+ * and the notation of the resulting move (if applicable)
+ */
+ export function addMoveToStack(notation, stack, allowDoubleMoves) {
+    if (stack.length === 0) {
+        stack.push(notation);
+        return { status: "appended", notation };
+    }
+
+    const newMove = getObjectFromNotation(notation);
+    const previousMoveNotation = stack[stack.length - 1];
+
+    const previousMove = getObjectFromNotation(previousMoveNotation);
+    if (previousMove.face !== newMove.face) {
+        stack.push(notation);
+        return { status: "appended", notation };
+    }
+
+    const directionValue = mapDirectionToNumber(newMove.direction) + mapDirectionToNumber(previousMove.direction);
+    const resultingDirection = mapNumberToDirection(directionValue);
+
+    if (resultingDirection === null) {
+        stack.pop();
+        return { status: "removed" };
+    }
+
+    if (allowDoubleMoves) {
+        const resultingMove = getNotation(newMove.face, resultingDirection);
+        stack.pop();
+        stack.push(resultingMove);
+        return { status: "modified", notation: resultingMove };
+    } else {
+        stack.push(notation);
+        return { status: "appended", notation };
+    }
+}

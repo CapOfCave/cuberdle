@@ -56,3 +56,18 @@ export function clearGuesses() {
     }
     resetCurrentGuess();
 }
+
+export function setGuessesAndEvaluation(guesses, evaluations, gameOver) {
+    
+    for (let i = 0; i < guesses.length; i++) {
+        for (let j = 0; j < guesses[i].length; j++) {
+            addGuess(j, guesses[i][j]);
+        }
+        addEvaluation(evaluations[i]);
+        if (i === guesses.length - 1 && gameOver) {
+            fixateFinalGuess();
+        } else {
+            moveToNextGuess();
+        }
+    }
+}

@@ -5,7 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
     entry: {
-        app: './src/index.js'
+        main: './src/pages/daily/index.js',
+        practice: './src/pages/practice/index.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -13,11 +14,17 @@ const config = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.pug'
+            template: './src/pages/daily/index.pug',
+            chunks: ["main"]
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/pages/practice/index.pug',
+            filename: 'practice.html',
+            chunks: ['practice']
         }),
         new CopyWebpackPlugin({
             patterns: [
-                {from: "public", to: ""}
+                { from: "public", to: "" }
             ]
         })
     ],
@@ -44,7 +51,12 @@ module.exports = (env, argv) => {
         config.devtool = 'inline-source-map'
         config.devServer = {
             port: 3000,
-            static: './dist',
+            static: './public',
+            historyApiFallback: {
+                rewrites: [
+                    { from: /^\/practice/, to: '/practice.html' },
+                  ],
+            }
         }
         config.optimization = {
             runtimeChunk: 'single'
@@ -60,6 +72,11 @@ module.exports = (env, argv) => {
     }
     if (argv.mode === 'production') {
         config.plugins.push(new MiniCssExtractPlugin())
+        config.optimization = {
+            splitChunks: {
+                chunks: "all",
+            },
+        },
         config.module.rules.push({
             test: /\.(sa|sc|c)ss$/i,
             use: [

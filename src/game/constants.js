@@ -20,3 +20,9 @@ export const EvaluationState = {
     ABSENT: 'absent', // grey
     EMPTY: 'empty', // uncolored
 }
+
+export const GameState = {
+    ONGOING: "ongoing",
+    WIN: "win",
+    LOSS: "loss",
+}

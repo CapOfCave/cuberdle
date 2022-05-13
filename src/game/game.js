@@ -1,8 +1,8 @@
-import { rotate, reset as resetCube } from '../cube/cubeOutput';
-import { directionsList, EvaluationState } from './constants';
-import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
-import { showWinScreen, showLossScreen, showInstructions } from './uiOutput';
-import { createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
+import { reset as resetCube, rotate } from '../cube/cubeOutput';
+import { EvaluationState, GameState } from './constants';
+import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
+import { showInstructions, showLossScreen, showWinScreen } from './uiOutput';
+import { addMoveToStack, createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection } from './utils';
 
 // ##########
 // # Config #
@@ -12,71 +12,23 @@ const GUESS_LENGTH = 5;
 
 const ALLOW_DOUBLE_MOVES = false;
 
-/**
- * Adds a new Move to the stack, possibly by combining it with the last one that existed
- * Does NOT check if the lastMoves array overflows! This should be checked elsewhere.
- * 
- * Return an array that indicates if the value was appended or the last element was modified/removed 
- * and the notation of the resulting move (if applicable)
- */
-function addMoveToStack(notation, stack) {
-    if (stack.length === 0) {
-        stack.push(notation);
-        return { status: "appended", notation };
-    }
-
-    const newMove = getObjectFromNotation(notation);
-    const previousMoveNotation = stack[stack.length - 1];
-
-    const previousMove = getObjectFromNotation(previousMoveNotation);
-    if (previousMove.face !== newMove.face) {
-        stack.push(notation);
-        return { status: "appended", notation };
-    }
-
-    const directionValue = mapDirectionToNumber(newMove.direction) + mapDirectionToNumber(previousMove.direction);
-    const resultingDirection = mapNumberToDirection(directionValue);
-
-    if (resultingDirection === null) {
-        stack.pop();
-        return { status: "removed" };
-    }
-
-    if (ALLOW_DOUBLE_MOVES) {
-        const resultingMove = getNotation(newMove.face, resultingDirection);
-        stack.pop();
-        stack.push(resultingMove);
-        return { status: "modified", notation: resultingMove };
-    } else {
-        stack.push(notation);
-        return { status: "appended", notation };
-    }
-}
-
-
-function initSolution() {
-    const solution = []
-    while (solution.length < GUESS_LENGTH) {
-        const direction = directionsList[Math.floor(Math.random() * 2)];
-        const face = Math.floor(Math.random() * 6);
-        const notation = getNotation(face, direction)
-        addMoveToStack(notation, solution);
-    }
-    return solution;
-}
-
 // ##############
 // # GAME STATE #
 // ##############
 
-let solution = initSolution();
+let solution;
 // const solution = [ "L", "D'", "B", "F'", "D"  ];
 // array of ["U", "F'", "D2"...] strings
 let lastMoves = []
-let gameOver = false;
+let gameResult = GameState.ONGOING;
 
 let previousGuesses = [];
 let previousEvaluations = [];
+
+let saveToLocalStorage = false;
+
+// TODO move to daily
+let puzzleId = null;
 
 /**
  * Evaluate a guess by returning it's evaluation array (which contains the strings 'correct', 'present', and 'absent')
@@ -143,11 +95,11 @@ function isNextMoveOverflowing(face, direction) {
 }
 
 export function turn(face, direction) {
-    if (gameOver) return;
+    if (gameResult !== GameState.ONGOING) return;
     if (isNextMoveOverflowing(face, direction)) return;
     const notation = getNotation(face, direction);
     rotate(face, direction);
-    const addMoveResponse = addMoveToStack(notation, lastMoves);
+    const addMoveResponse = addMoveToStack(notation, lastMoves, ALLOW_DOUBLE_MOVES);
     switch (addMoveResponse.status) {
         case "appended":
             addGuess(lastMoves.length - 1, addMoveResponse.notation);
@@ -203,17 +155,18 @@ export function submit() {
     if (isAllCorrect(evaluations)) {
         fixateFinalGuess();
         lastMoves = []
-        gameOver = true;
+        gameResult = GameState.WIN;
         showWinScreen(previousEvaluations, solution);
     } else if (previousGuesses.length >= GUESS_COUNT) {
         fixateFinalGuess();
         lastMoves = []
-        gameOver = true;
+        gameResult = GameState.LOSS;
         showLossScreen(previousEvaluations, solution)
     } else {
         moveToNextGuess();
         clearCube()
     }
+    updateLocalStorage();
 }
 
 
@@ -224,13 +177,12 @@ function setupInstructions() {
     }
 }
 
-function setup() {
+export function setup() {
     setupGuesses();
-    setupCube();
     setupInstructions();
 }
 
-function setupCube() {
+export function setupCube() {
     [...solution].reverse().forEach(notation => revert(notation, true))
 }
 
@@ -252,17 +204,55 @@ function setupGuesses() {
     }
 }
 
-export function reset() {
+export function setSolution(newSolution) {
     resetCube();
     clearGuesses();
     lastMoves = [];
-    gameOver = false;
+    gameResult = GameState.ONGOING;
     previousEvaluations = [];
     previousGuesses = [];
 
-    solution = initSolution();
+    solution = newSolution;
+    updateLocalStorage();
+    setupCube();
+}
+
+function updateLocalStorage() {
+    if (!saveToLocalStorage) return;
+    window.localStorage.setItem("daily_puzzleId", puzzleId);
+    window.localStorage.setItem("daily_solution", JSON.stringify(solution));
+    window.localStorage.setItem("daily_gameState", gameResult);
+    window.localStorage.setItem("daily_guesses", JSON.stringify(previousGuesses));
+    window.localStorage.setItem("daily_evaluations", JSON.stringify(previousEvaluations)); 
+    window.localStorage.setItem("daily_puzzleId", puzzleId) 
+}
+
+// TODO cleanup :)
+export function loadFromLocalStorage() {
+    const localSolution = JSON.parse(window.localStorage.getItem("daily_solution"));
+    solution = localSolution;
     setupCube();
 
+    const localGameResult = window.localStorage.getItem("daily_gameState");
+    const localPreviousGuesses = JSON.parse(window.localStorage.getItem("daily_guesses"));
+    const localPreviousEvaluations = JSON.parse(window.localStorage.getItem("daily_evaluations"));
+
+    previousGuesses = localPreviousGuesses ?? []
+    previousEvaluations = localPreviousEvaluations ?? []
+
+    setGuessesAndEvaluation(previousGuesses, previousEvaluations, localGameResult === GameState.LOSS || localGameResult === GameState.WIN);
+
+    if (localGameResult === GameState.LOSS) {
+        showLossScreen(previousEvaluations, localSolution);
+        gameResult = localGameResult;
+    } else if (localGameResult === GameState.WIN) {
+        showWinScreen(previousEvaluations, localSolution);
+        gameResult = localGameResult;
+    } else {
+        gameResult = GameState.ONGOING;
+    }
+
+    puzzleId = window.localStorage.getItem("daily_puzzleId", puzzleId);
 }
 
 export function createShareText() {
@@ -279,4 +269,12 @@ https://cuberdle.com`;
 
 export function init() {
     window.addEventListener('load', setup);
+}
+
+export function setSaveToLocalStorage(value) {
+    saveToLocalStorage = value;
+}
+
+export function setPuzzleId(value) {
+    puzzleId = value;
 }
