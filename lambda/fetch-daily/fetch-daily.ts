@@ -60,7 +60,10 @@ export const handler: Handler = async (event, context) => {
     statusCode: 200,
     headers,
     body: JSON.stringify({
-      normal: challenges.normal,
+      normal: {
+        id: `normal-${challenges.id}`,
+        solution: challenges.normal,
+      }
     }),
   }
 }

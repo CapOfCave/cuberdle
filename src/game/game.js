@@ -1,8 +1,8 @@
-import { rotate, reset as resetCube } from '../cube/cubeOutput';
-import { directionsList, EvaluationState, GameState } from './constants';
+import { reset as resetCube, rotate } from '../cube/cubeOutput';
+import { EvaluationState, GameState } from './constants';
 import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
-import { showWinScreen, showLossScreen, showInstructions } from './uiOutput';
-import { addMoveToStack, createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection, mapDirectionToNumber, mapNumberToDirection } from './utils';
+import { showInstructions, showLossScreen, showWinScreen } from './uiOutput';
+import { addMoveToStack, createEmojiPattern, getNotation, getObjectFromNotation, inverseDirection } from './utils';
 
 // ##########
 // # Config #
@@ -26,6 +26,9 @@ let previousGuesses = [];
 let previousEvaluations = [];
 
 let saveToLocalStorage = false;
+
+// TODO move to daily
+let puzzleId = null;
 
 /**
  * Evaluate a guess by returning it's evaluation array (which contains the strings 'correct', 'present', and 'absent')
@@ -216,19 +219,17 @@ export function setSolution(newSolution) {
 
 function updateLocalStorage() {
     if (!saveToLocalStorage) return;
+    window.localStorage.setItem("daily_puzzleId", puzzleId);
     window.localStorage.setItem("daily_solution", JSON.stringify(solution));
     window.localStorage.setItem("daily_gameState", gameResult);
     window.localStorage.setItem("daily_guesses", JSON.stringify(previousGuesses));
     window.localStorage.setItem("daily_evaluations", JSON.stringify(previousEvaluations)); 
+    window.localStorage.setItem("daily_puzzleId", puzzleId) 
 }
 
 // TODO cleanup :)
 export function loadFromLocalStorage() {
     const localSolution = JSON.parse(window.localStorage.getItem("daily_solution"));
-    if (!localSolution) {
-        return false;
-    }
-
     solution = localSolution;
     setupCube();
 
@@ -250,6 +251,8 @@ export function loadFromLocalStorage() {
     } else {
         gameResult = GameState.ONGOING;
     }
+
+    puzzleId = window.localStorage.getItem("daily_puzzleId", puzzleId);
 }
 
 export function createShareText() {
@@ -270,4 +273,8 @@ export function init() {
 
 export function setSaveToLocalStorage(value) {
     saveToLocalStorage = value;
+}
+
+export function setPuzzleId(value) {
+    puzzleId = value;
 }
