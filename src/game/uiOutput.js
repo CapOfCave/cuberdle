@@ -47,6 +47,10 @@ export function showInstructions() {
     openModal("instructionsModal")
 }
 
+export function showSettings() {
+    openModal("settingsModal")
+}
+
 export function shareResults(text) {
     navigator.clipboard.writeText(text);
 
