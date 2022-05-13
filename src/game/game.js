@@ -25,6 +25,8 @@ let gameResult = GameState.ONGOING;
 let previousGuesses = [];
 let previousEvaluations = [];
 
+let saveToLocalStorage = false;
+
 /**
  * Evaluate a guess by returning it's evaluation array (which contains the strings 'correct', 'present', and 'absent')
  * 
@@ -214,6 +216,7 @@ export function setSolution(newSolution) {
 }
 
 function updateLocalStorage() {
+    if (!saveToLocalStorage) return;
     window.localStorage.setItem("daily_solution", JSON.stringify(solution));
     window.localStorage.setItem("daily_gameState", gameResult);
     window.localStorage.setItem("daily_guesses", JSON.stringify(previousGuesses));
@@ -264,4 +267,9 @@ https://cuberdle.com`;
 
 export function init() {
     window.addEventListener('load', setup);
+}
+
+export function setSaveToLocalStorage(value) {
+    saveToLocalStorage = value;
+    console.log("now", saveToLocalStorage)
 }

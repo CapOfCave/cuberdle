@@ -1,4 +1,4 @@
-import { loadFromLocalStorage, setSolution, setup as setupGame } from '../../game/game';
+import { loadFromLocalStorage, setSaveToLocalStorage, setSolution, setup as setupGame } from '../../game/game';
 
 const FETCH_URL = "http://localhost:8888/.netlify/functions/fetch-daily"
 
@@ -11,6 +11,7 @@ function fetchDailyChallenge() {
 }
 
 export function setup() {
+    setSaveToLocalStorage(true);
     setupGame();
     
     if (window.localStorage.getItem("daily_solution")) {

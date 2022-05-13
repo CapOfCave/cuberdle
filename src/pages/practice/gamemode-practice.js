@@ -1,5 +1,5 @@
 import { directionsList } from '../../game/constants';
-import { setSolution, setup as setupGame } from '../../game/game';
+import { setSaveToLocalStorage, setSolution, setup as setupGame } from '../../game/game';
 import { closeModal } from '../../game/uiOutput';
 import { addMoveToStack, getNotation } from '../../game/utils';
 
@@ -18,6 +18,7 @@ function generateSolution(solutionLength, allowDoubleMoves) {
 }
 
 export function setup() {
+    setSaveToLocalStorage(false);
     setupGame();
     reset();
 }
