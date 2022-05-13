@@ -51,7 +51,12 @@ module.exports = (env, argv) => {
         config.devtool = 'inline-source-map'
         config.devServer = {
             port: 3000,
-            static: './dist',
+            static: './public',
+            historyApiFallback: {
+                rewrites: [
+                    { from: /^\/practice/, to: '/practice.html' },
+                  ],
+            }
         }
         config.optimization = {
             runtimeChunk: 'single'
