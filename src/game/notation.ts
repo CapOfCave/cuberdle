@@ -19,7 +19,7 @@ export function getDirectionNotation(direction: Direction) {
  */
  export function getObjectFromNotation(notation: Notation) {
     const face = faceNames.indexOf(notation.charAt(0) as FaceNotation);
-    const direction = Object.keys(DIRECTION_NOTATIONS).find(key => DIRECTION_NOTATIONS[key] === notation.charAt(1));
+    const direction = Object.keys(DIRECTION_NOTATIONS).find(key => DIRECTION_NOTATIONS[key] === notation.charAt(1)) as Direction;
     return { face, direction }
 }
 

@@ -12,7 +12,7 @@ export function inverseDirection(direction: Direction) {
 /**
  * Return a direction to the number of clockwise rotation it needs to reach said direction
  */
-export function mapDirectionToNumber(direction) {
+export function mapDirectionToNumber(direction: Direction) {
     switch (direction) {
         case Direction.CLOCKWISE: return 1;
         case Direction.ANTI_CLOCKWISE: return 3;
@@ -27,10 +27,10 @@ export function mapDirectionToNumber(direction) {
     if (directionNumber % 4 === 0) return null;
     
     switch (directionNumber % 4) {
-        case 0: return null;
         case 1: return Direction.CLOCKWISE;
         case 2: return Direction.DOUBLE_MOVE;
         case 3: return Direction.ANTI_CLOCKWISE;
+        default: return null;
     }
 }
 

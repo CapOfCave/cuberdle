@@ -3,7 +3,7 @@ import { Db, MongoClient } from 'mongodb';
 
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'mongodb://localhost:27017';
 
-let cachedDb = null;
+let cachedDb: Db | null = null;
 
 async function connectToDatabase(): Promise<Db> {
   if (cachedDb) {
@@ -13,7 +13,7 @@ async function connectToDatabase(): Promise<Db> {
   // Connect to our MongoDB database hosted on MongoDB Atlas
   const client = await MongoClient.connect(DB_CONNECTION_STRING);
   // Specify which database we want to use
-  const db = await client.db("cuberdle-db");
+  const db = client.db("cuberdle-db");
 
   cachedDb = db;
   return db;
@@ -21,7 +21,7 @@ async function connectToDatabase(): Promise<Db> {
 
 export const handler: Handler = async (event, context) => {
   
-  const headers = process.env.NODE_ENV === "production" ? {} : {
+  const headers = process.env.NODE_ENV === "production" ? undefined : {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'GET'

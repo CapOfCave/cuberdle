@@ -5,6 +5,7 @@ import { showInstructions, showLossScreen, showWinScreen } from './uiOutput';
 import { createEmojiPattern, inverseDirection } from './utils';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic' 
 import { getNotation, getObjectFromNotation } from './notation'
+
 // ##########
 // # Config #
 // ##########
