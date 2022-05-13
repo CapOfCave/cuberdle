@@ -1,5 +1,5 @@
 import { EvaluationState } from "./constants";
-import { getObjectFromNotation, mapDirectionToNumber, mapNumberToDirection } from "./utils";
+import { getNotation, getObjectFromNotation, mapDirectionToNumber, mapNumberToDirection } from "./utils";
 
 /**
  * Evaluate a guess by returning it's evaluation array (which contains the strings 'correct', 'present', and 'absent')
