@@ -202,7 +202,6 @@ function setupGuesses() {
 }
 
 export function setSolution(newSolution) {
-    console.log(newSolution)
     resetCube();
     clearGuesses();
     lastMoves = [];
@@ -271,5 +270,4 @@ export function init() {
 
 export function setSaveToLocalStorage(value) {
     saveToLocalStorage = value;
-    console.log("now", saveToLocalStorage)
 }

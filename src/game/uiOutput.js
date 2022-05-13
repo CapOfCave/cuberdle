@@ -51,13 +51,11 @@ export function shareResults(text) {
     navigator.clipboard.writeText(text);
 
     const tooltips = document.getElementsByClassName("share-tooltip");
-    console.log(tooltips)
     for (let tooltip of tooltips) {
         tooltip.classList.add("visible")
     }
 
     setTimeout(() => {
-        console.log(tooltips)
         for (let tooltip of tooltips) {
             tooltip.classList.remove("visible")
         }
