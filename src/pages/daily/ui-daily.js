@@ -5,15 +5,15 @@ import { createEmojiPattern } from '../../game/utils';
 
 function createShareText() {
 
-    const { previousEvaluations, config} = getGameState();
+    const { puzzleId, previousEvaluations, config} = getGameState();
+
+    const [_difficultyId, dayId] = puzzleId.split("-");
 
     let lastGuess = previousEvaluations[previousEvaluations.length - 1];
     let tries = lastGuess.every(val => val === EvaluationState.CORRECT) ? previousEvaluations.length : 'X';
 
-    return `Cuberdle (Normal Difficulty) ${tries}/${config.guessCount}
-
-${createEmojiPattern(previousEvaluations, '\n')}
-https://cuberdle.com`;
+    return `Cuberdle #${dayId} (Normal Difficulty) ${tries}/${config.guessCount}
+${createEmojiPattern(previousEvaluations, '\n')}https://cuberdle.com`;
 
 }
 
