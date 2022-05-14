@@ -1,8 +1,8 @@
-import { loadSettings, updateItem } from "./settings";
+import { loadSettings, Settings, updateItem } from "./settings";
 
-function getRadioButtonValue(name: string) {
+function getRadioButtonValue(name: string): string | null {
     const selectedElement: HTMLInputElement | null = document.querySelector(`input[name="settings-${name}"]:checked`);
-    return selectedElement?.value;
+    return selectedElement?.value ?? null;
 }
 
 function setRadioButtonValue(name: string, value: string) {
@@ -13,7 +13,7 @@ function setRadioButtonValue(name: string, value: string) {
     selectedElement.value = value;
 }
 
-function initRadioButtonEventListener(name: string, onChange: (value: string) => void) {
+function initRadioButtonEventListener(name: string, onChange: OnChangeFunction) {
     const radios: NodeListOf<HTMLInputElement> = document.querySelectorAll(`input[name="settings-${name}"]`);
     for (let i = 0; i < radios.length; i++) {
         radios[i].onclick = function () {
@@ -22,7 +22,18 @@ function initRadioButtonEventListener(name: string, onChange: (value: string) =>
     }
 }
 
-const inputTypes = {
+type OnChangeFunction = (value: SettingsValue) => void;
+
+type InputTypeKey = "radio";
+
+interface InputType {
+    get: (meta: SettingsMeta) => SettingsValue | null,
+    set: (meta: SettingsMeta, value: SettingsValue) => void,
+    init: (meta: SettingsMeta, onChange: OnChangeFunction) => void,
+}
+
+
+const inputTypes: {[key in InputTypeKey]: InputType} = {
     "radio": {
         get: (meta) => getRadioButtonValue(meta.name),
         set: (meta, value) => setRadioButtonValue(meta.name, value),
@@ -30,8 +41,11 @@ const inputTypes = {
     }
 }
 
+type SettingsValue = string;
 
-const settingsMeta = {
+type SettingsMeta = any;
+
+const settingsMetas: {[key in keyof Settings]: SettingsMeta} = {
     cubeControlMode: {
         type: "radio",
         name: "cube-control-mode"
@@ -42,10 +56,10 @@ const settingsMeta = {
 function init() {
     const settings = loadSettings();
     for (let [key, value] of Object.entries(settings)) {
-        const meta = settingsMeta[key];
+        const meta = settingsMetas[key];
         const methods = inputTypes[meta.type];
         methods.set(meta, value);
-        methods.init(meta, (newValue: string) => updateItem({ [key]: newValue}))
+        methods.init(meta, (newValue: string) => updateItem({ [key]: newValue }))
     }
 }
 
