@@ -1,4 +1,5 @@
 import '../../styles/styles'
+import '../../ui/settingsDom'
 
 import { init as inputInit } from '../../cube/cubeInput';
 import { init as outputInit } from '../../cube/cubeOutput';
