@@ -13,9 +13,7 @@ function createShareText() {
 
     return `Cuberdle Practice (Normal Difficulty) ${tries}/${config.guessCount}
 ${solution.join(', ')}
-
-${createEmojiPattern(previousEvaluations, '\n')}
-https://cuberdle.com`;
+${createEmojiPattern(previousEvaluations, '\n')}https://cuberdle.com`;
 }
 
 export function shareButtonClicked() {

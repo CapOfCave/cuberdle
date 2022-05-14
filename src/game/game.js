@@ -200,6 +200,7 @@ export function loadFromLocalStorage() {
 
 export function getGameState() {
     return {
+        puzzleId,
         previousEvaluations,
         config,
         solution,
