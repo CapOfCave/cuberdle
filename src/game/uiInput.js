@@ -1,5 +1,5 @@
 import { directionsList } from './constants';
-import { turn, undo, submit, clearGuess } from './game';
+import { clearGuess, submit, turn, undo } from './game';
 
 export function undoButtonClicked() {
     undo();
