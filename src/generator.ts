@@ -24,7 +24,7 @@ function randomElement<T>(array: Array<T>): T {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-function getDirection(allowDoubleTurns: string, relativeDoubleMoveProbability: number): DirectionNotation {
+function getDirection(allowDoubleTurns: boolean, relativeDoubleMoveProbability: number): DirectionNotation {
     if (!allowDoubleTurns) {
         return randomElement(['', "'"]);
     }
@@ -36,7 +36,7 @@ function getDirection(allowDoubleTurns: string, relativeDoubleMoveProbability: n
     return directionsWithDoubleTurns[index];
 }
 
-function generateFirstMove(allowDoubleTurns: string, relativeDoubleMoveProbability: number): { notation: Notation, dimension: Dimension } {
+function generateFirstMove(allowDoubleTurns: boolean, relativeDoubleMoveProbability: number): { notation: Notation, dimension: Dimension } {
     let dimension = randomElement(dimensions);
     const faceNotation = randomElement(dimension.faces);
     const direction = getDirection(allowDoubleTurns, relativeDoubleMoveProbability);
@@ -46,7 +46,7 @@ function generateFirstMove(allowDoubleTurns: string, relativeDoubleMoveProbabili
     }
 }
 
-function generateOtherMove(lastDimension: Dimension, allowDoubleTurns: string, relativeDoubleMoveProbability: number): { notation: Notation, dimension: Dimension } {
+function generateOtherMove(lastDimension: Dimension, allowDoubleTurns: boolean, relativeDoubleMoveProbability: number): { notation: Notation, dimension: Dimension } {
     let dimension = randomElement(dimensions.filter(dimension => dimension.id !== lastDimension.id));
     const faceNotation = randomElement(dimension.faces);
     const direction = getDirection(allowDoubleTurns, relativeDoubleMoveProbability);
@@ -57,7 +57,7 @@ function generateOtherMove(lastDimension: Dimension, allowDoubleTurns: string, r
 }
 
 
-export function generateScramble(turnCount: number, allowDoubleTurns: string, relativeDoubleMoveProbability: number = 1) {
+export function generateScramble(turnCount: number, allowDoubleTurns: boolean, relativeDoubleMoveProbability: number = 1) {
 
     if (turnCount < 1) {
         throw new Error(`turnCount must be greater than 0, but was ${turnCount}`);
