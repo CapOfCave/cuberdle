@@ -1,2 +1,2 @@
 # cuberdle
-A wordle-inspired game targetting the Rubik's Cube
+A wordle-inspired game targeting the Rubik's Cube
