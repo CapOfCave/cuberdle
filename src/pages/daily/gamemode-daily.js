@@ -1,6 +1,6 @@
 import { loadFromLocalStorage, setConfig, setPuzzleId, setSaveToLocalStorage, setSolution, setUpGuesses } from '../../game/game';
 
-const FETCH_URL = "http://localhost:8888/.netlify/functions/fetch-daily"
+const FETCH_URL = "/.netlify/functions/fetch-daily";
 
 const config = {
     guessCount: 5,
