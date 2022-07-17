@@ -5,6 +5,7 @@ import { showInstructions, showLossScreen, showWinScreen } from './uiOutput';
 import { createEmojiPattern, inverseDirection } from './utils';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic' 
 import { getNotation, getObjectFromNotation } from './notation'
+import { Evaluation, Guess } from './types';
 
 // ##########
 // # Config #
@@ -27,16 +28,16 @@ const config = {
 let solution;
 // const solution = [ "L", "D'", "B", "F'", "D"  ];
 // array of ["U", "F'", "D2"...] strings
-let lastMoves = []
+let lastMoves: Guess = []
 let gameResult = GameState.ONGOING;
 
-let previousGuesses = [];
-let previousEvaluations = [];
+let previousGuesses: Guess[] = [];
+let previousEvaluations: Evaluation[] = [];
 
 let saveToLocalStorage = false;
 
 // TODO move to daily
-let puzzleId = null;
+let puzzleId: string | null = null;
 
 export function turn(face, direction) {
     if (gameResult !== GameState.ONGOING) return;
@@ -116,7 +117,7 @@ export function submit() {
 function setupInstructions() {
     if (!window.localStorage.getItem('skipInstructions')) {
         showInstructions();
-        window.localStorage.setItem('skipInstructions', true)
+        window.localStorage.setItem('skipInstructions', "true")
     }
 }
 
@@ -143,7 +144,7 @@ function setupGuesses() {
         }
 
         const guessSection = document.getElementById("guessSection")
-        guessSection.appendChild(guessRow);
+        guessSection!.appendChild(guessRow);
     }
 }
 
@@ -162,23 +163,22 @@ export function setSolution(newSolution) {
 
 function updateLocalStorage() {
     if (!saveToLocalStorage) return;
-    window.localStorage.setItem("daily_puzzleId", puzzleId);
+    window.localStorage.setItem("daily_puzzleId", puzzleId!);
     window.localStorage.setItem("daily_solution", JSON.stringify(solution));
     window.localStorage.setItem("daily_gameState", gameResult);
     window.localStorage.setItem("daily_guesses", JSON.stringify(previousGuesses));
     window.localStorage.setItem("daily_evaluations", JSON.stringify(previousEvaluations)); 
-    window.localStorage.setItem("daily_puzzleId", puzzleId) 
 }
 
 // TODO cleanup :)
 export function loadFromLocalStorage() {
-    const localSolution = JSON.parse(window.localStorage.getItem("daily_solution"));
+    const localSolution = JSON.parse(window.localStorage.getItem("daily_solution")!);
     solution = localSolution;
     setupCube();
 
     const localGameResult = window.localStorage.getItem("daily_gameState");
-    const localPreviousGuesses = JSON.parse(window.localStorage.getItem("daily_guesses"));
-    const localPreviousEvaluations = JSON.parse(window.localStorage.getItem("daily_evaluations"));
+    const localPreviousGuesses = JSON.parse(window.localStorage.getItem("daily_guesses")!);
+    const localPreviousEvaluations = JSON.parse(window.localStorage.getItem("daily_evaluations")!);
 
     previousGuesses = localPreviousGuesses ?? []
     previousEvaluations = localPreviousEvaluations ?? []
@@ -195,7 +195,7 @@ export function loadFromLocalStorage() {
         gameResult = GameState.ONGOING;
     }
 
-    puzzleId = window.localStorage.getItem("daily_puzzleId", puzzleId);
+    puzzleId = window.localStorage.getItem("daily_puzzleId");
 }
 
 export function getGameState() {
