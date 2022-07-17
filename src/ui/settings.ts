@@ -9,8 +9,6 @@ export enum Difficulty {
     HARD = "hard",
 }
 
-// const settings: Settings = loadSettings();
-
 const DEFAULT_SETTINGS: Settings = {
     // cubeControlMode: CubeControlMode.DRAG_TO_TURN,
     colorblindMode: false,

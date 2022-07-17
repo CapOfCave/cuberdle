@@ -6,11 +6,18 @@ function getRadioButtonValue(name: string): string | null {
 }
 
 function setRadioButtonValue(name: string, value: string) {
+    // uncheck all radios...
+    const radios: NodeListOf<HTMLInputElement> = document.querySelectorAll(`input[name="settings-${name}"]`);
+    for (let i = 0; i < radios.length; i++) {
+        radios[i].checked = false;
+    }
+
+    // ... except for the correct one
     const selectedElement: HTMLInputElement | null = document.querySelector(`input[name="settings-${name}"][value="${value}"]`);
     if (!selectedElement) {
         throw new Error(`Illegal value for radio button ${name}: ${value}`);
     }
-    selectedElement.value = value;
+    selectedElement.checked = true;
 }
 
 function initRadioButtonEventListener(name: string, onChange: OnChangeFunction) {
