@@ -1,9 +1,9 @@
 import { EvaluationState } from "./constants";
 
-function getLetterAt(index) {
+function getLetterAt(index): HTMLElement {
     const currentGuess = document.getElementById('currentGuess');
-    const children = currentGuess.children;
-    return children[index]
+    const children = currentGuess!.children;
+    return children[index] as HTMLElement
 }
 
 export function addGuess(index, notation) {
@@ -18,14 +18,14 @@ export function removeGuess(index) {
 
 export function moveToNextGuess() {
     const currentGuess = document.getElementById('currentGuess');
-    currentGuess.id = ""
-    const next = currentGuess.nextElementSibling;
-    next.id = "currentGuess";
+    currentGuess!.id = ""
+    const next = currentGuess!.nextElementSibling;
+    next!.id = "currentGuess";
 }
 
 export function fixateFinalGuess() {
     const currentGuess = document.getElementById('currentGuess');
-    currentGuess.id = ""
+    currentGuess!.id = ""
 }
 
 
@@ -49,7 +49,7 @@ function resetCurrentGuess() {
 }
 export function clearGuesses() {
     const guessSection = document.getElementById('guessSection');
-    const moveCards = guessSection.querySelectorAll('.move-card');
+    const moveCards = guessSection!.querySelectorAll('.move-card') as NodeListOf<HTMLElement>;
     for (let moveCard of moveCards) {
         moveCard.textContent = ""
         moveCard.dataset.state = EvaluationState.EMPTY

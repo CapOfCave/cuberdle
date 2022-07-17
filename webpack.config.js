@@ -5,8 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
     entry: {
-        main: './src/pages/daily/index.js',
-        practice: './src/pages/practice/index.js',
+        main: './src/pages/daily/index.ts',
+        practice: './src/pages/practice/index.ts',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

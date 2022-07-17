@@ -53,7 +53,7 @@ function revert(moveNotation, skipAnimation = false) {
     rotate(lastMove.face, inversedDirection, skipAnimation);
 }
 
-export function undo(skipAnimation) {
+export function undo(skipAnimation = false) {
     if (lastMoves.length == 0) return;
     const lastMoveNotation = lastMoves.pop();
     revert(lastMoveNotation, skipAnimation);
@@ -189,7 +189,7 @@ export function getGameState() {
     return {
         puzzleId,
         previousEvaluations,
-        pConfig,
+        config: pConfig!,
         solution,
     }
 }

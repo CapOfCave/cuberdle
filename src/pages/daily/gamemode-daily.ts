@@ -18,16 +18,14 @@ function loadRelevantPuzzle(fetchPuzzleId, fetchSolution) {
     const localPuzzleId = window.localStorage.getItem(`daily_puzzleId`);
     const localSolution = window.localStorage.getItem(`daily_solution`);
 
+    setConfig(config)
     if (localPuzzleId && localSolution && localPuzzleId === fetchPuzzleId) {
         loadFromLocalStorage();
         return;
     }
 
-    setConfig(config)
-
     setPuzzleId(fetchPuzzleId);
     setSolution(fetchSolution);
-
 
 }
 
