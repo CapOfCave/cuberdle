@@ -5,18 +5,18 @@ import { GameConfig } from "./types";
 const difficultyGameConfigs: {[key in Difficulty]: GameConfig} = {
     [Difficulty.EASY]: {
         allowDoubleMoves: false,
-        guessLength: 1,
+        guessLength: 5,
         guessCount: 5,
     },
     [Difficulty.MEDIUM]: {
-        allowDoubleMoves: false,
-        guessLength: 2,
+        allowDoubleMoves: true,
+        guessLength: 6,
         guessCount: 5,
     },
     [Difficulty.HARD]: {
         allowDoubleMoves: true,
-        guessLength: 3,
-        guessCount: 5,
+        guessLength: 7,
+        guessCount: 6,
     }
 }
 
