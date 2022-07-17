@@ -2,7 +2,7 @@ import { Direction } from '../game/constants';
 import { inverseDirection } from '../game/utils';
 import './cube.scss'
 import { mx } from './cubeLib'
-
+import { init as colorModeInit} from './colorMode';
 // this code was written by a wizard
 // I am trying to make sense of it
 
@@ -150,5 +150,6 @@ export function reset() {
 
 
 export function init() {
+    colorModeInit();
     window.addEventListener('load', assembleCube);
 }

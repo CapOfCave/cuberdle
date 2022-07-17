@@ -4,8 +4,26 @@ $sticker-size: 95%;
 $rounded: 10%;
 $cube-scale: 3;
 $faces: (left: (0, -90, 180), right: (0, 90, 90), back: (0, 180, -90), front: (0, 0, 0), bottom: (-90, 0, -90), top: (90, 0, 180));
-$cube-colors: (blue: #001ca8, green: #006E16, white: #DDD, yellow: #E0AE00, orange: #FF5000, red: #DF0500);
 
+$cube-colors: (blue: var(--cube-color-blue), green: var(--cube-color-green), white: var(--cube-color-white), yellow: var(--cube-color-yellow), orange: var(--cube-color-orange), red: var(--cube-color-red));
+
+body {
+	--cube-color-blue: #001ca8;
+	--cube-color-green: #006E16;
+	--cube-color-white: #DDD;
+	--cube-color-yellow: #E0AE00;
+	--cube-color-orange: #FF5000;
+	--cube-color-red: #DF0500;
+}
+
+body.colorblind {
+	--cube-color-blue: #332288;
+	--cube-color-green: #117733;
+	--cube-color-white: #DDD;
+	--cube-color-yellow: #DDCC77;
+	--cube-color-orange: #CC6677;
+	--cube-color-red: #882255;
+}
 
 .preview {
 	height: 12rem * $cube-scale;

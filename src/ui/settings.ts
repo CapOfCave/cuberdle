@@ -6,11 +6,13 @@ export enum CubeControlMode {
 // const settings: Settings = loadSettings();
 
 const DEFAULT_SETTINGS: Settings = {
-    cubeControlMode: CubeControlMode.DRAG_TO_TURN,
+    // cubeControlMode: CubeControlMode.DRAG_TO_TURN,
+    colorblindMode: false,
 }
 
 export interface Settings {
-    cubeControlMode: CubeControlMode,
+    colorblindMode: boolean,
+    // cubeControlMode?: CubeControlMode,
 }
 
 export function saveSettings(settings) {
@@ -20,7 +22,7 @@ export function saveSettings(settings) {
 export function loadSettings(): Settings {
     const settingsRaw = window.localStorage.getItem("settings");
     if (!settingsRaw) return DEFAULT_SETTINGS;
-    return JSON.parse(settingsRaw);
+    return {...DEFAULT_SETTINGS, ...JSON.parse(settingsRaw)};
 }
 
 export function updateItem(diff: Partial<Settings>): Settings {
