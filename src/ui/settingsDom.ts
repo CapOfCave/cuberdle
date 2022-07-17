@@ -80,10 +80,10 @@ const settingsMetas: { [key in keyof Settings]: SettingsMeta } = {
         type: "checkbox",
         name: "colorblind-mode",
     },
-    // difficulty: {
-    //     type: "radio",
-    //     name: "difficulty",
-    // }
+    difficulty: {
+        type: "radio",
+        name: "difficulty",
+    }
 }
 
 function settingChanged(settingId: string, newValue: string) {

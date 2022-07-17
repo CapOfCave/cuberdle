@@ -1,16 +1,17 @@
 import { directionsList } from '../../game/constants';
-import { setSaveToLocalStorage, setSolution, setup as setupGame } from '../../game/game';
+import { setConfig, setSaveToLocalStorage, setSolution, setUpGuesses } from '../../game/game';
 import { addMoveToStack } from '../../game/gameLogic';
 import { closeModal } from '../../game/uiOutput';
 import { getNotation } from '../../game/notation';
+import { getGameConfig } from '../../game/difficulty';
+import { GameConfig } from '../../game/types';
 
-const GUESS_LENGTH = 5;
-const ALLOW_DOUBLE_MOVES = false;
 
-function generateSolution(solutionLength, allowDoubleMoves) {
+function generateSolution(solutionLength: number, allowDoubleMoves: boolean) {
     const solution = []
     while (solution.length < solutionLength) {
-        const direction = directionsList[Math.floor(Math.random() * 2)];
+        const directionTypeCount = allowDoubleMoves ? 3 : 2;
+        const direction = directionsList[Math.floor(Math.random() * directionTypeCount)];
         const face = Math.floor(Math.random() * 6);
         const notation = getNotation(face, direction)
         addMoveToStack(notation, solution, allowDoubleMoves);
@@ -20,12 +21,15 @@ function generateSolution(solutionLength, allowDoubleMoves) {
 
 export function setup() {
     setSaveToLocalStorage(false);
-    setupGame();
     reset();
 }
 
 export function reset() {
-    setSolution(generateSolution(GUESS_LENGTH, ALLOW_DOUBLE_MOVES))
+    const difficultySettings: GameConfig = getGameConfig();
+    const solution = generateSolution(difficultySettings.guessLength, difficultySettings.allowDoubleMoves);
+    setConfig(difficultySettings)
+    setUpGuesses(difficultySettings);
+    setSolution(solution)
 }
 
 export function playAgain() {

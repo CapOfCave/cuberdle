@@ -3,15 +3,23 @@ export enum CubeControlMode {
     DRAG_TO_TURN = "dragToTurn",
 } 
 
+export enum Difficulty {
+    EASY = "easy",
+    MEDIUM = "medium",
+    HARD = "hard",
+}
+
 // const settings: Settings = loadSettings();
 
 const DEFAULT_SETTINGS: Settings = {
     // cubeControlMode: CubeControlMode.DRAG_TO_TURN,
     colorblindMode: false,
+    difficulty: Difficulty.EASY,
 }
 
 export interface Settings {
     colorblindMode: boolean,
+    difficulty: Difficulty,
     // cubeControlMode?: CubeControlMode,
 }
 

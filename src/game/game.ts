@@ -5,21 +5,10 @@ import { showInstructions, showLossScreen, showWinScreen } from './uiOutput';
 import { createEmojiPattern, inverseDirection } from './utils';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic' 
 import { getNotation, getObjectFromNotation } from './notation'
-import { Evaluation, Guess } from './types';
+import { Evaluation, GameConfig, Guess } from './types';
 
-// ##########
-// # Config #
-// ##########
-const GUESS_COUNT = 5;
-const GUESS_LENGTH = 5;
 
-const ALLOW_DOUBLE_MOVES = false;
-
-const config = {
-    guessCount: GUESS_COUNT,
-    guessLength: GUESS_LENGTH,
-    allowDoubleMoves: ALLOW_DOUBLE_MOVES,
-}
+let pConfig: GameConfig | null = null;
 
 // ##############
 // # GAME STATE #
@@ -41,10 +30,10 @@ let puzzleId: string | null = null;
 
 export function turn(face, direction) {
     if (gameResult !== GameState.ONGOING) return;
-    if (isNextMoveOverflowing(face, direction, lastMoves, config)) return;
+    if (isNextMoveOverflowing(face, direction, lastMoves, pConfig!)) return;
     const notation = getNotation(face, direction);
     rotate(face, direction);
-    const addMoveResponse = addMoveToStack(notation, lastMoves, ALLOW_DOUBLE_MOVES);
+    const addMoveResponse = addMoveToStack(notation, lastMoves, pConfig!.allowDoubleMoves);
     switch (addMoveResponse.status) {
         case "appended":
             addGuess(lastMoves.length - 1, addMoveResponse.notation);
@@ -91,7 +80,7 @@ function isAllCorrect(evaluations) {
 }
 
 export function submit() {
-    if (lastMoves.length != GUESS_LENGTH) return;
+    if (lastMoves.length != pConfig!.guessLength) return;
     previousGuesses.push([...lastMoves]);
     const evaluations = evaluateGuess(lastMoves, solution);
     previousEvaluations.push(evaluations)
@@ -101,7 +90,7 @@ export function submit() {
         lastMoves = []
         gameResult = GameState.WIN;
         showWinScreen(previousEvaluations, solution);
-    } else if (previousGuesses.length >= GUESS_COUNT) {
+    } else if (previousGuesses.length >= pConfig!.guessCount) {
         fixateFinalGuess();
         lastMoves = []
         gameResult = GameState.LOSS;
@@ -121,29 +110,27 @@ function setupInstructions() {
     }
 }
 
-export function setup() {
-    setupGuesses();
-    setupInstructions();
-}
-
 export function setupCube() {
     [...solution].reverse().forEach(notation => revert(notation, true))
 }
 
-function setupGuesses() {
-    for (let i = 0; i < GUESS_COUNT; i++) {
+export function setUpGuesses(config: GameConfig) {
+    const guessSection = document.getElementById("guessSection")
+    while (guessSection!.firstChild) {
+        guessSection!.removeChild(guessSection!.lastChild!);
+      }
+    for (let i = 0; i < config.guessCount; i++) {
         const guessRow = document.createElement('div');
         guessRow.classList.add('guess-row')
         if (i === 0) guessRow.setAttribute('id', 'currentGuess');
 
-        for (let j = 0; j < GUESS_LENGTH; j++) {
+        for (let j = 0; j < config.guessLength; j++) {
             const moveCard = document.createElement('div');
             moveCard.classList.add('move-card')
             moveCard.dataset.state = EvaluationState.EMPTY;
             guessRow.appendChild(moveCard)
         }
 
-        const guessSection = document.getElementById("guessSection")
         guessSection!.appendChild(guessRow);
     }
 }
@@ -202,13 +189,13 @@ export function getGameState() {
     return {
         puzzleId,
         previousEvaluations,
-        config,
+        pConfig,
         solution,
     }
 }
 
 export function init() {
-    window.addEventListener('load', setup);
+    window.addEventListener('load', setupInstructions);
 }
 
 export function setSaveToLocalStorage(value) {
@@ -217,4 +204,8 @@ export function setSaveToLocalStorage(value) {
 
 export function setPuzzleId(value) {
     puzzleId = value;
+}
+
+export function setConfig(newConfig: GameConfig) {
+    pConfig = newConfig;
 }

@@ -312,12 +312,12 @@ body.modal-open #modal {
 	color: #fff;
 	text-align: center;
 	border-radius: 6px;
-	padding: 5px 10px;
-	position: absolute;
+	padding: 0;
+	position: relative;
 	z-index: 1;
-	bottom: 150%;
-	left: 50%;
-	margin-left: -5.5rem;
+	// bottom: 150%;
+	// left: 50%;
+	// margin-left: -5.5rem;
 	opacity: 0;
 	transition: opacity 0.3s;
 }
@@ -352,4 +352,12 @@ body.modal-open #modal {
 
 .icon-button {
 	margin: 0 0.5rem;
+}
+
+.label-with-icon {
+	font-size: 1.2rem;
+	vertical-align: middle;
+	display: inline-flex;
+	gap: 0.5rem;
+	
 }
