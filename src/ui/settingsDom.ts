@@ -79,10 +79,6 @@ type SettingsValue = string | boolean;
 type SettingsMeta = any;
 
 const settingsMetas: { [key in keyof Settings]: SettingsMeta } = {
-    // cubeControlMode: {
-    //     type: "radio",
-    //     name: "cube-control-mode"
-    // },
     colorblindMode: {
         type: "checkbox",
         name: "colorblind-mode",

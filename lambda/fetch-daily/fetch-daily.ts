@@ -65,15 +65,12 @@ export const handler: Handler = async (event, context) => {
         solution: challenges.normal,
       },
       easy: challenges.easy && {
-        id: `easy-${challenges.id}`,
         solution: challenges.easy,
       },
       medium: challenges.medium && {
-        id: `medium-${challenges.id}`,
         solution: challenges.medium,
       },
       hard: challenges.hard && {
-        id: `hard-${challenges.id}`,
         solution: challenges.hard,
       }
     }),

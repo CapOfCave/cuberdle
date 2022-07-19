@@ -26,7 +26,7 @@ export interface GameCallbacks {
 }
 
 export class Game {
-    pConfig: GameConfig;
+    config: GameConfig;
     solution: Guess;
     lastMoves: Guess = []
     gameResult = GameState.ONGOING;
@@ -35,7 +35,7 @@ export class Game {
     callbacks: GameCallbacks;
 
     constructor(config: GameConfig, solution: Guess, callbacks: GameCallbacks, existingData: {gameResult: GameState, previousGuesses: Guess[], previousEvaluations: Evaluation[]} | null = null) {
-        this.pConfig = config;
+        this.config = config;
         this.solution = solution;
         this.callbacks = callbacks;
         
@@ -49,11 +49,11 @@ export class Game {
     start = () => {
         resetCube();
         this.setupCube();
-        setUpGuesses(this.pConfig);
+        setUpGuesses(this.config);
         setGuessesAndEvaluation(this.previousGuesses, this.previousEvaluations, this.gameResult  === GameState.LOSS ||  this.gameResult === GameState.WIN)
         if (this.previousEvaluations.some(evaluation => isAllCorrect(evaluation))) {
             showWinScreen(this.previousEvaluations, this.solution);
-        } else if (this.previousGuesses.length >= this.pConfig.guessCount) {
+        } else if (this.previousGuesses.length >= this.config.guessCount) {
             showLossScreen(this.previousEvaluations, this.solution);
         } 
         // replace the 'current' instance
@@ -62,10 +62,10 @@ export class Game {
 
     turn = (face, direction) => {
         if (this.gameResult !== GameState.ONGOING) return;
-        if (isNextMoveOverflowing(face, direction, this.lastMoves, this.pConfig!)) return;
+        if (isNextMoveOverflowing(face, direction, this.lastMoves, this.config!)) return;
         const notation = getNotation(face, direction);
         rotate(face, direction);
-        const addMoveResponse = addMoveToStack(notation, this.lastMoves, this.pConfig!.allowDoubleMoves);
+        const addMoveResponse = addMoveToStack(notation, this.lastMoves, this.config!.allowDoubleMoves);
         switch (addMoveResponse.status) {
             case "appended":
                 addGuess(this.lastMoves.length - 1, addMoveResponse.notation);
@@ -112,7 +112,7 @@ export class Game {
     }
 
     submit = () => {
-        if (this.lastMoves.length != this.pConfig.guessLength) return;
+        if (this.lastMoves.length != this.config.guessLength) return;
         this.previousGuesses.push([...this.lastMoves]);
         const evaluations = evaluateGuess(this.lastMoves, this.solution);
         this.previousEvaluations.push(evaluations)
@@ -122,7 +122,7 @@ export class Game {
             this.lastMoves = []
             this.gameResult = GameState.WIN;
             showWinScreen(this.previousEvaluations, this.solution);
-        } else if (this.previousGuesses.length >= this.pConfig.guessCount) {
+        } else if (this.previousGuesses.length >= this.config.guessCount) {
             fixateFinalGuess();
             this.lastMoves = []
             this.gameResult = GameState.LOSS;
@@ -142,7 +142,7 @@ export class Game {
         return {
             previousGuesses: this.previousGuesses,
             previousEvaluations: this.previousEvaluations,
-            config: this.pConfig!,
+            config: this.config,
             solution: this.solution,
             gameResult: this.gameResult,
         }

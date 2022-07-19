@@ -10,7 +10,6 @@ export enum Difficulty {
 }
 
 const DEFAULT_SETTINGS: Settings = {
-    // cubeControlMode: CubeControlMode.DRAG_TO_TURN,
     colorblindMode: false,
     difficulty: Difficulty.EASY,
 }
@@ -18,7 +17,6 @@ const DEFAULT_SETTINGS: Settings = {
 export interface Settings {
     colorblindMode: boolean,
     difficulty: Difficulty,
-    // cubeControlMode?: CubeControlMode,
 }
 
 export function saveSettings(settings) {

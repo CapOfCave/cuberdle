@@ -10,7 +10,7 @@ export class DailyGame extends Game {
 
     private puzzleId: string;
 
-    constructor(config: GameConfig, solution: Guess, callbacks: GameCallbacks, puzzleId: string, existingData: {gameResult: GameState, previousGuesses: Guess[], previousEvaluations: Evaluation[]} | null = null) {
+    constructor(config: GameConfig, solution: Guess, callbacks: GameCallbacks, puzzleId: string, existingData: { gameResult: GameState, previousGuesses: Guess[], previousEvaluations: Evaluation[] } | null = null) {
         super(config, solution, callbacks, existingData)
         this.puzzleId = puzzleId;
     }
