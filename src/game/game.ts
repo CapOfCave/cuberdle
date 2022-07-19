@@ -1,7 +1,7 @@
 import { reset as resetCube, rotate } from '../cube/cubeOutput';
 import { EvaluationState, GameState } from './constants';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic';
-import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
+import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
 import { getNotation, getObjectFromNotation } from './notation';
 import { Evaluation, GameConfig, Guess } from './types';
 import { showLossScreen, showWinScreen } from './uiOutput';
@@ -13,8 +13,17 @@ export function getCurrentGame(): Game | null {
     return currentInstance;
 }
 
-export class Game {
+export interface GameStateData {
+    puzzleId: string | null;
+    previousEvaluations: Evaluation[];
+    config: GameConfig;
+    solution: Guess;
+}
+export interface GameCallbacks {
+    onChanged?(gameState: GameStateData): void;
+}
 
+export class Game {
     pConfig: GameConfig;
     solution: Guess;
     lastMoves: Guess = []
@@ -26,17 +35,21 @@ export class Game {
 
     // TODO move to daily
     puzzleId: string | null = null;
+    callbacks: GameCallbacks;
 
-    constructor(config: GameConfig, solution: Guess, saveToLocalStorage: boolean, puzzleId: string | null = null) {
+
+    constructor(config: GameConfig, solution: Guess, saveToLocalStorage: boolean, callbacks: GameCallbacks, puzzleId: string | null = null, ) {
         this.pConfig = config;
         this.saveToLocalStorage = saveToLocalStorage;
         this.solution = solution;
+        this.callbacks = callbacks;
         this.puzzleId = puzzleId;
     }
 
     start = () => {
+        resetCube();
+        this.setupCube();
         setUpGuesses(this.pConfig);
-        this.setSolution(this.solution);
         // replace the 'current' instance
         currentInstance = this;
     }
@@ -57,6 +70,7 @@ export class Game {
             case "removed":
                 removeGuess(this.lastMoves.length);
         }
+        this.notifyChanged();
     }
 
     revert = (moveNotation, skipAnimation = false) => {
@@ -66,17 +80,19 @@ export class Game {
         rotate(lastMove.face, inversedDirection, skipAnimation);
     }
 
-    undo = (skipAnimation = false) => {
+    undo = (skipAnimation = false, notify = true) => {
         if (this.lastMoves.length == 0) return;
         const lastMoveNotation = this.lastMoves.pop();
         this.revert(lastMoveNotation, skipAnimation);
-        removeGuess(this.lastMoves.length)
+        removeGuess(this.lastMoves.length);
+        if (notify) this.notifyChanged();
     }
 
     clearGuess = () => {
         while (this.lastMoves.length > 0) {
-            this.undo(true);
+            this.undo(true, false);
         }
+        this.notifyChanged();
     }
 
     /**
@@ -86,6 +102,7 @@ export class Game {
         while (this.lastMoves.length > 0) {
             this.revert(this.lastMoves.pop())
         }
+        this.notifyChanged();
     }
 
     submit = () => {
@@ -108,69 +125,24 @@ export class Game {
             moveToNextGuess();
             this.clearCube()
         }
-        this.updateLocalStorage();
     }
 
     setupCube = () => {
         [...this.solution].reverse().forEach(notation => this.revert(notation, true))
     }
 
-    setSolution = (newSolution) => {
-        resetCube();
-        clearGuesses();
-        this.lastMoves = [];
-        this.gameResult = GameState.ONGOING;
-        this.previousEvaluations = [];
-        this.previousGuesses = [];
-
-        // solution = newSolution;
-        this.updateLocalStorage();
-        this.setupCube();
-    }
-
-    updateLocalStorage = () => {
-        if (!this.saveToLocalStorage) return;
-        window.localStorage.setItem("daily_puzzleId", this.puzzleId!);
-        window.localStorage.setItem("daily_solution", JSON.stringify(this.solution));
-        window.localStorage.setItem("daily_gameState", this.gameResult);
-        window.localStorage.setItem("daily_guesses", JSON.stringify(this.previousGuesses));
-        window.localStorage.setItem("daily_evaluations", JSON.stringify(this.previousEvaluations));
-    }
-
-    // TODO cleanup :)
-    loadFromLocalStorage = () => {
-        const localSolution = JSON.parse(window.localStorage.getItem("daily_solution")!);
-        this.solution = localSolution;
-        this.setupCube();
-
-        const localGameResult = window.localStorage.getItem("daily_gameState");
-        const localPreviousGuesses = JSON.parse(window.localStorage.getItem("daily_guesses")!);
-        const localPreviousEvaluations = JSON.parse(window.localStorage.getItem("daily_evaluations")!);
-
-        this.previousGuesses = localPreviousGuesses ?? []
-        this.previousEvaluations = localPreviousEvaluations ?? []
-
-        setGuessesAndEvaluation(this.previousGuesses, this.previousEvaluations, localGameResult === GameState.LOSS || localGameResult === GameState.WIN);
-
-        if (localGameResult === GameState.LOSS) {
-            showLossScreen(this.previousEvaluations, localSolution);
-            this.gameResult = localGameResult;
-        } else if (localGameResult === GameState.WIN) {
-            showWinScreen(this.previousEvaluations, localSolution);
-            this.gameResult = localGameResult;
-        } else {
-            this.gameResult = GameState.ONGOING;
-        }
-
-        this.puzzleId = window.localStorage.getItem("daily_puzzleId");
-    }
-
-    getGameState = () => {
+    getGameState = (): GameStateData => {
         return {
             puzzleId: this.puzzleId,
             previousEvaluations: this.previousEvaluations,
             config: this.pConfig!,
             solution: this.solution,
+        }
+    }
+
+    notifyChanged = () => {
+        if (this.callbacks.onChanged) {
+            this.callbacks.onChanged(this.getGameState());
         }
     }
 }

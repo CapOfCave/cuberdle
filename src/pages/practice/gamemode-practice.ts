@@ -1,8 +1,9 @@
 import { getGameConfig } from '../../game/difficulty';
-import { Game } from '../../game/game';
+import { Game, GameStateData } from '../../game/game';
 import { GameConfig } from '../../game/types';
 import { closeModal } from '../../game/uiOutput';
 import { generateScramble } from '../../generator';
+
 
 
 function generateSolution(solutionLength: number, allowDoubleMoves: boolean) {
@@ -16,7 +17,7 @@ export function setup() {
 export function reset() {
     const difficultySettings: GameConfig = getGameConfig();
     const solution = generateSolution(difficultySettings.guessLength, difficultySettings.allowDoubleMoves);
-    const game = new Game(difficultySettings, solution, false);
+    const game = new Game(difficultySettings, solution, false, {});
     game.start();
 }
 

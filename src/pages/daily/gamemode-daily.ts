@@ -1,4 +1,4 @@
-import { Game } from '../../game/game';
+import { Game, GameStateData } from '../../game/game';
 import { Guess } from '../../game/types';
 
 const FETCH_URL = "/.netlify/functions/fetch-daily";
@@ -45,7 +45,7 @@ function loadRelevantPuzzle(response: Response) {
     const fetchPuzzleId = response.normal.id;
     const fetchSolution = response.normal.solution;
 
-    const game = new Game(config, fetchSolution, true, fetchPuzzleId);
+    const game = new Game(config, fetchSolution, true, {}, fetchPuzzleId);
 
     game.start();
 
