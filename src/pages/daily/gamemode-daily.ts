@@ -59,7 +59,7 @@ function loadRelevantPuzzle(response: Response) {
         return;
     }
 
-    const game = new DailyGame(getGameConfig(), fetchSolution, { onChange: (gameState) => onCubeChange(gameState, fetchPuzzleId, difficulty) }, fetchPuzzleId);
+    const game = new DailyGame(getGameConfig(), fetchSolution, { onChange: (gameState) => onCubeChange(gameState, fetchPuzzleId, difficulty) }, fetchPuzzleId, difficulty);
     game.start();
 
 }
@@ -84,7 +84,7 @@ function loadFromLocalStorage() {
     const localPreviousEvaluations = JSON.parse(window.localStorage.getItem(`daily_${difficulty}_evaluations`)!);
     const localPuzzleId = window.localStorage.getItem(`daily_${difficulty}_puzzleId`) ?? "unknown";
 
-    const game = new DailyGame(getGameConfig(), localSolution, { onChange: (gameState) => onCubeChange(gameState, localPuzzleId, difficulty) }, localPuzzleId, {
+    const game = new DailyGame(getGameConfig(), localSolution, { onChange: (gameState) => onCubeChange(gameState, localPuzzleId, difficulty) }, localPuzzleId, difficulty, {
         gameResult: localGameResult ? <GameState>localGameResult : GameState.ONGOING,
         previousGuesses: localPreviousGuesses,
         previousEvaluations: localPreviousEvaluations,

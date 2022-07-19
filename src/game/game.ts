@@ -1,4 +1,5 @@
 import { reset as resetCube, rotate } from '../cube/cubeOutput';
+import { Difficulty } from '../ui/settings';
 import { EvaluationState, GameState } from './constants';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic';
 import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
@@ -19,6 +20,7 @@ export interface GameStateData {
     config: GameConfig;
     solution: Guess;
     gameResult: GameState;
+    difficulty: Difficulty;
 }
 
 export interface GameCallbacks {
@@ -34,10 +36,13 @@ export class Game {
     previousEvaluations: Evaluation[] = [];
     callbacks: GameCallbacks;
 
-    constructor(config: GameConfig, solution: Guess, callbacks: GameCallbacks, existingData: {gameResult: GameState, previousGuesses: Guess[], previousEvaluations: Evaluation[]} | null = null) {
+    difficulty: Difficulty;
+
+    constructor(config: GameConfig, solution: Guess, callbacks: GameCallbacks, difficulty: Difficulty, existingData: {gameResult: GameState, previousGuesses: Guess[], previousEvaluations: Evaluation[]} | null = null) {
         this.config = config;
         this.solution = solution;
         this.callbacks = callbacks;
+        this.difficulty = difficulty;
         
         if (existingData) {
             this.gameResult = existingData.gameResult;
@@ -145,6 +150,7 @@ export class Game {
             config: this.config,
             solution: this.solution,
             gameResult: this.gameResult,
+            difficulty: this.difficulty,
         }
     }
 

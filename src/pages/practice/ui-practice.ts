@@ -8,12 +8,12 @@ function createShareText() {
     const game = getCurrentGame();
     if (!game) return `invalid`;
 
-    const { previousEvaluations, solution, config } = game.getGameState();
+    const { previousEvaluations, solution, config, difficulty } = game.getGameState();
 
     let lastGuess = previousEvaluations[previousEvaluations.length - 1];
     let tries = lastGuess.every(val => val === EvaluationState.CORRECT) ? previousEvaluations.length : 'X';
 
-    return `Cuberdle Practice (Normal Difficulty) ${tries}/${config.guessCount}
+    return `Cuberdle Practice (${difficulty} difficulty) ${tries}/${config.guessCount}
 ${solution.join(', ')}
 ${createEmojiPattern(previousEvaluations, '\n')}https://cuberdle.com`;
 }

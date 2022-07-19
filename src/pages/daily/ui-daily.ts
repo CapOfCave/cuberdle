@@ -9,13 +9,12 @@ function createShareText() {
     const game = getCurrentGame() as DailyGame;
     if (!game) return `invalid`;
 
-    const { puzzleId, previousEvaluations, config} = game.getGameState();
-    const [_difficultyId, dayId] = puzzleId!.split("-");
+    const { puzzleId, previousEvaluations, config, difficulty} = game.getGameState();
 
     let lastGuess = previousEvaluations[previousEvaluations.length - 1];
     let tries = lastGuess.every(val => val === EvaluationState.CORRECT) ? previousEvaluations.length : 'X';
 
-    return `Cuberdle #${dayId} (Normal Difficulty) ${tries}/${config.guessCount}
+    return `Cuberdle #${puzzleId} (${difficulty} difficulty) ${tries}/${config.guessCount}
 ${createEmojiPattern(previousEvaluations, '\n')}https://cuberdle.com`;
 
 }

@@ -1,4 +1,4 @@
-import { getGameConfig } from '../../game/difficulty';
+import { getDifficulty, getGameConfig } from '../../game/difficulty';
 import { Game } from '../../game/game';
 import { GameConfig } from '../../game/types';
 import { closeModal } from '../../game/uiOutput';
@@ -13,9 +13,10 @@ export function setUp() {
 }
 
 export function reset() {
+    const difficulty = getDifficulty();
     const difficultySettings: GameConfig = getGameConfig();
     const solution = generateSolution(difficultySettings.guessLength, difficultySettings.allowDoubleMoves);
-    const game = new Game(difficultySettings, solution, {});
+    const game = new Game(difficultySettings, solution, {}, difficulty);
     game.start();
 }
 
