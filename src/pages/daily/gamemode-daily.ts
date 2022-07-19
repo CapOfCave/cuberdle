@@ -36,34 +36,36 @@ async function fetchDailyChallenge(): Promise<Response> {
         })
 }
 
-function onCubeChange(gameState: GameStateData, puzzleId: string) {
-    window.localStorage.setItem("daily_puzzleId", puzzleId);
-    window.localStorage.setItem("daily_solution", JSON.stringify(gameState.solution));
-    window.localStorage.setItem("daily_gameState", gameState.gameResult);
-    window.localStorage.setItem("daily_guesses", JSON.stringify(gameState.previousGuesses));
-    window.localStorage.setItem("daily_evaluations", JSON.stringify(gameState.previousEvaluations));
+function onCubeChange(gameState: GameStateData, puzzleId: string, difficulty: string) {
+    window.localStorage.setItem(`daily_${difficulty}_puzzleId`, puzzleId);
+    window.localStorage.setItem(`daily_${difficulty}_solution`, JSON.stringify(gameState.solution));
+    window.localStorage.setItem(`daily_${difficulty}_gameState`, gameState.gameResult);
+    window.localStorage.setItem(`daily_${difficulty}_guesses`, JSON.stringify(gameState.previousGuesses));
+    window.localStorage.setItem(`daily_${difficulty}_evaluations`, JSON.stringify(gameState.previousEvaluations));
 }
 
 function loadRelevantPuzzle(response: Response) {
     const fetchPuzzleId = response.id;
-    const fetchSolution = extractSolution(response);
+    const difficulty = getDifficulty();
 
-    const localPuzzleId = window.localStorage.getItem(`daily_puzzleId`);
-    const localSolution = window.localStorage.getItem(`daily_solution`);
+    const fetchSolution = extractSolution(response, difficulty);
 
-    if (localPuzzleId && localSolution && localPuzzleId === fetchPuzzleId) {
+    const localPuzzleId = window.localStorage.getItem(`daily_${difficulty}_puzzleId`);
+    const localSolution = window.localStorage.getItem(`daily_${difficulty}_solution`);
+
+    if (localPuzzleId && localSolution && localPuzzleId == fetchPuzzleId) {
         const game = loadFromLocalStorage();
         game.start()
         return;
     }
 
-    const game = new DailyGame(getGameConfig(), fetchSolution, { onChange: (gameState) => onCubeChange(gameState, fetchPuzzleId) }, fetchPuzzleId);
+    const game = new DailyGame(getGameConfig(), fetchSolution, { onChange: (gameState) => onCubeChange(gameState, fetchPuzzleId, difficulty) }, fetchPuzzleId);
     game.start();
 
 }
 
-function extractSolution(response: Response) {
-    switch (getDifficulty()) {
+function extractSolution(response: Response, difficulty: Difficulty) {
+    switch (difficulty) {
         case Difficulty.EASY: 
             return response.normal.solution.splice(0, 2);
         case Difficulty.MEDIUM:
@@ -74,13 +76,15 @@ function extractSolution(response: Response) {
 }
 
 function loadFromLocalStorage() {
-    const localSolution = JSON.parse(window.localStorage.getItem("daily_solution")!);
-    const localGameResult = window.localStorage.getItem("daily_gameState");
-    const localPreviousGuesses = JSON.parse(window.localStorage.getItem("daily_guesses")!);
-    const localPreviousEvaluations = JSON.parse(window.localStorage.getItem("daily_evaluations")!);
-    const localPuzzleId = window.localStorage.getItem("daily_puzzleId") ?? "unknown";
+    const difficulty = getDifficulty();
+    
+    const localSolution = JSON.parse(window.localStorage.getItem(`daily_${difficulty}_solution`)!);
+    const localGameResult = window.localStorage.getItem(`daily_${difficulty}_gameState`);
+    const localPreviousGuesses = JSON.parse(window.localStorage.getItem(`daily_${difficulty}_guesses`)!);
+    const localPreviousEvaluations = JSON.parse(window.localStorage.getItem(`daily_${difficulty}_evaluations`)!);
+    const localPuzzleId = window.localStorage.getItem(`daily_${difficulty}_puzzleId`) ?? "unknown";
 
-    const game = new DailyGame(getGameConfig(), localSolution, { onChange: (gameState) => onCubeChange(gameState, localPuzzleId) }, localPuzzleId, {
+    const game = new DailyGame(getGameConfig(), localSolution, { onChange: (gameState) => onCubeChange(gameState, localPuzzleId, difficulty) }, localPuzzleId, {
         gameResult: localGameResult ? <GameState>localGameResult : GameState.ONGOING,
         previousGuesses: localPreviousGuesses,
         previousEvaluations: localPreviousEvaluations,
