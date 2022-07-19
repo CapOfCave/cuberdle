@@ -41,7 +41,6 @@ export class Game {
         
         if (existingData) {
             this.gameResult = existingData.gameResult;
-            console.log("exitss:", this.gameResult)
             this.previousGuesses = existingData.previousGuesses;
             this.previousEvaluations = existingData.previousEvaluations;
         }
@@ -62,7 +61,6 @@ export class Game {
     }
 
     turn = (face, direction) => {
-        console.log(this.gameResult)
         if (this.gameResult !== GameState.ONGOING) return;
         if (isNextMoveOverflowing(face, direction, this.lastMoves, this.pConfig!)) return;
         const notation = getNotation(face, direction);

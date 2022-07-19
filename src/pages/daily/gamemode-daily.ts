@@ -1,22 +1,24 @@
 import { GameState } from '../../game/constants';
+import { getDifficulty, getGameConfig } from '../../game/difficulty';
 import { Game, GameStateData } from '../../game/game';
 import { Guess } from '../../game/types';
+import { Difficulty } from '../../ui/settings';
 import { DailyGame } from './daily-game';
 
 const FETCH_URL = "http://localhost:8888/.netlify/functions/fetch-daily";
 // const FETCH_URL = "/.netlify/functions/fetch-daily";
 
-const config = {
-    guessCount: 5,
-    guessLength: 5,
-    allowDoubleMoves: false,
+interface ResponseGameData {
+    id: string,
+    solution: Guess,
 }
 
 interface Response {
-    normal: {
-        id: string,
-        solution: Guess,
-    }
+    id: string,
+    easy: ResponseGameData,
+    medium: ResponseGameData,
+    hard: ResponseGameData,
+    normal: ResponseGameData,
 }
 
 let fetchCache: Response | null = null;
@@ -35,7 +37,7 @@ async function fetchDailyChallenge(): Promise<Response> {
 }
 
 function onCubeChange(gameState: GameStateData, puzzleId: string) {
-    window.localStorage.setItem("daily_puzzleId", puzzleId!);
+    window.localStorage.setItem("daily_puzzleId", puzzleId);
     window.localStorage.setItem("daily_solution", JSON.stringify(gameState.solution));
     window.localStorage.setItem("daily_gameState", gameState.gameResult);
     window.localStorage.setItem("daily_guesses", JSON.stringify(gameState.previousGuesses));
@@ -43,43 +45,42 @@ function onCubeChange(gameState: GameStateData, puzzleId: string) {
 }
 
 function loadRelevantPuzzle(response: Response) {
-
-    // switch (getDifficulty()) {
-    //     case Difficulty.EASY: 
-    //         break;
-    //     case Difficulty.MEDIUM:
-    //         break;
-    //     case Difficulty.HARD:
-    //         break;
-    // }
-
-    const fetchPuzzleId = response.normal.id;
-    const fetchSolution = response.normal.solution;
+    const fetchPuzzleId = response.id;
+    const fetchSolution = extractSolution(response);
 
     const localPuzzleId = window.localStorage.getItem(`daily_puzzleId`);
     const localSolution = window.localStorage.getItem(`daily_solution`);
 
     if (localPuzzleId && localSolution && localPuzzleId === fetchPuzzleId) {
-        console.log("locally")
-        const game = loadFromLocalStorage(fetchPuzzleId);
+        const game = loadFromLocalStorage();
         game.start()
         return;
     }
 
-    const game = new DailyGame(config, fetchSolution, { onChange: (gameState) => onCubeChange(gameState, fetchPuzzleId) }, fetchPuzzleId);
-
+    const game = new DailyGame(getGameConfig(), fetchSolution, { onChange: (gameState) => onCubeChange(gameState, fetchPuzzleId) }, fetchPuzzleId);
     game.start();
 
 }
 
-function loadFromLocalStorage(fetchPuzzleId: string) {
+function extractSolution(response: Response) {
+    switch (getDifficulty()) {
+        case Difficulty.EASY: 
+            return response.normal.solution.splice(0, 2);
+        case Difficulty.MEDIUM:
+            return response.normal.solution.splice(0, 3);
+        case Difficulty.HARD:
+            return response.normal.solution.splice(0, 4);
+    }
+}
+
+function loadFromLocalStorage() {
     const localSolution = JSON.parse(window.localStorage.getItem("daily_solution")!);
     const localGameResult = window.localStorage.getItem("daily_gameState");
     const localPreviousGuesses = JSON.parse(window.localStorage.getItem("daily_guesses")!);
     const localPreviousEvaluations = JSON.parse(window.localStorage.getItem("daily_evaluations")!);
     const localPuzzleId = window.localStorage.getItem("daily_puzzleId") ?? "unknown";
 
-    const game = new DailyGame(config, localSolution, { onChange: (gameState) => onCubeChange(gameState, fetchPuzzleId) }, localPuzzleId, {
+    const game = new DailyGame(getGameConfig(), localSolution, { onChange: (gameState) => onCubeChange(gameState, localPuzzleId) }, localPuzzleId, {
         gameResult: localGameResult ? <GameState>localGameResult : GameState.ONGOING,
         previousGuesses: localPreviousGuesses,
         previousEvaluations: localPreviousEvaluations,

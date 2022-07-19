@@ -9,9 +9,7 @@ function createShareText() {
     const game = getCurrentGame() as DailyGame;
     if (!game) return `invalid`;
 
-    const a = game.getGameState();
-    console.log(a);
-    const { puzzleId, previousEvaluations, config} = a;
+    const { puzzleId, previousEvaluations, config} = game.getGameState();
     const [_difficultyId, dayId] = puzzleId!.split("-");
 
     let lastGuess = previousEvaluations[previousEvaluations.length - 1];
