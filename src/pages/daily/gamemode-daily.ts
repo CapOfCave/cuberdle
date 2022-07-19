@@ -1,6 +1,6 @@
 import { GameState } from '../../game/constants';
 import { getDifficulty, getGameConfig } from '../../game/difficulty';
-import { Game, GameStateData } from '../../game/game';
+import { GameStateData } from '../../game/game';
 import { Guess } from '../../game/types';
 import { Difficulty } from '../../ui/settings';
 import { DailyGame } from './daily-game';
