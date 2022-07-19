@@ -1,7 +1,7 @@
 import { reset as resetCube, rotate } from '../cube/cubeOutput';
 import { EvaluationState, GameState } from './constants';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic';
-import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess } from './moveOutput';
+import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
 import { getNotation, getObjectFromNotation } from './notation';
 import { Evaluation, GameConfig, Guess } from './types';
 import { showLossScreen, showWinScreen } from './uiOutput';
@@ -16,11 +16,13 @@ export function getCurrentGame(): Game | null {
 export interface GameStateData {
     puzzleId: string | null;
     previousEvaluations: Evaluation[];
+    previousGuesses: Guess[];
     config: GameConfig;
     solution: Guess;
+    gameResult: GameState;
 }
 export interface GameCallbacks {
-    onChanged?(gameState: GameStateData): void;
+    onChange?(gameState: GameStateData): void;
 }
 
 export class Game {
@@ -31,25 +33,34 @@ export class Game {
     previousGuesses: Guess[] = [];
     previousEvaluations: Evaluation[] = [];
 
-    saveToLocalStorage = false;
-
     // TODO move to daily
     puzzleId: string | null = null;
     callbacks: GameCallbacks;
 
 
-    constructor(config: GameConfig, solution: Guess, saveToLocalStorage: boolean, callbacks: GameCallbacks, puzzleId: string | null = null, ) {
+    constructor(config: GameConfig, solution: Guess, callbacks: GameCallbacks, puzzleId: string | null = null, existingData: {gameResult: GameState, previousGuesses: Guess[], previousEvaluations: Evaluation[]} | null = null) {
         this.pConfig = config;
-        this.saveToLocalStorage = saveToLocalStorage;
         this.solution = solution;
         this.callbacks = callbacks;
         this.puzzleId = puzzleId;
+        
+        if (existingData) {
+            this.gameResult = existingData.gameResult;
+            this.previousGuesses = existingData.previousGuesses;
+            this.previousEvaluations = existingData.previousEvaluations;
+        }
     }
 
     start = () => {
         resetCube();
         this.setupCube();
         setUpGuesses(this.pConfig);
+        setGuessesAndEvaluation(this.previousGuesses, this.previousEvaluations, this.gameResult  === GameState.LOSS ||  this.gameResult === GameState.WIN)
+        if (this.previousEvaluations.some(evaluation => isAllCorrect(evaluation))) {
+            showWinScreen(this.previousEvaluations, this.solution);
+        } else if (this.previousGuesses.length >= this.pConfig.guessCount) {
+            showLossScreen(this.previousEvaluations, this.solution)
+        } 
         // replace the 'current' instance
         currentInstance = this;
     }
@@ -125,6 +136,7 @@ export class Game {
             moveToNextGuess();
             this.clearCube()
         }
+        this.notifyChanged();
     }
 
     setupCube = () => {
@@ -134,15 +146,17 @@ export class Game {
     getGameState = (): GameStateData => {
         return {
             puzzleId: this.puzzleId,
+            previousGuesses: this.previousGuesses,
             previousEvaluations: this.previousEvaluations,
             config: this.pConfig!,
             solution: this.solution,
+            gameResult: this.gameResult,
         }
     }
 
     notifyChanged = () => {
-        if (this.callbacks.onChanged) {
-            this.callbacks.onChanged(this.getGameState());
+        if (this.callbacks.onChange) {
+            this.callbacks.onChange(this.getGameState());
         }
     }
 }

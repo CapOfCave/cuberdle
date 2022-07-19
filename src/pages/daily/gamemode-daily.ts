@@ -1,7 +1,9 @@
+import { GameState } from '../../game/constants';
 import { Game, GameStateData } from '../../game/game';
 import { Guess } from '../../game/types';
 
-const FETCH_URL = "/.netlify/functions/fetch-daily";
+const FETCH_URL = "http://localhost:8888/.netlify/functions/fetch-daily";
+// const FETCH_URL = "/.netlify/functions/fetch-daily";
 
 const config = {
     guessCount: 5,
@@ -13,7 +15,7 @@ interface Response {
     normal: {
         id: string,
         solution: Guess,
-      }
+    }
 }
 
 let fetchCache: Response | null = null;
@@ -31,6 +33,14 @@ async function fetchDailyChallenge(): Promise<Response> {
         })
 }
 
+function onCubeChange(gameState: GameStateData, puzzleId: string) {
+    window.localStorage.setItem("daily_puzzleId", puzzleId!);
+    window.localStorage.setItem("daily_solution", JSON.stringify(gameState.solution));
+    window.localStorage.setItem("daily_gameState", gameState.gameResult);
+    window.localStorage.setItem("daily_guesses", JSON.stringify(gameState.previousGuesses));
+    window.localStorage.setItem("daily_evaluations", JSON.stringify(gameState.previousEvaluations));
+}
+
 function loadRelevantPuzzle(response: Response) {
 
     // switch (getDifficulty()) {
@@ -45,10 +55,35 @@ function loadRelevantPuzzle(response: Response) {
     const fetchPuzzleId = response.normal.id;
     const fetchSolution = response.normal.solution;
 
-    const game = new Game(config, fetchSolution, true, {}, fetchPuzzleId);
+    const localPuzzleId = window.localStorage.getItem(`daily_puzzleId`);
+    const localSolution = window.localStorage.getItem(`daily_solution`);
+
+    if (localPuzzleId && localSolution && localPuzzleId === fetchPuzzleId) {
+        console.log("locally")
+        const game = loadFromLocalStorage(fetchPuzzleId);
+        game.start()
+        return;
+    }
+
+    const game = new Game(config, fetchSolution, { onChange: (gameState) => onCubeChange(gameState, fetchPuzzleId) }, fetchPuzzleId);
 
     game.start();
 
+}
+
+function loadFromLocalStorage(fetchPuzzleId: string) {
+    const localSolution = JSON.parse(window.localStorage.getItem("daily_solution")!);
+    const localGameResult = window.localStorage.getItem("daily_gameState");
+    const localPreviousGuesses = JSON.parse(window.localStorage.getItem("daily_guesses")!);
+    const localPreviousEvaluations = JSON.parse(window.localStorage.getItem("daily_evaluations")!);
+    const localPuzzleId = window.localStorage.getItem("daily_puzzleId");
+
+    const game = new Game(config, localSolution, { onChange: (gameState) => onCubeChange(gameState, fetchPuzzleId) }, localPuzzleId, {
+        gameResult: (localGameResult && GameState[localGameResult]) ?? GameState.ONGOING,
+        previousGuesses: localPreviousGuesses,
+        previousEvaluations: localPreviousEvaluations,
+    });
+    return game;
 }
 
 export function setup() {
