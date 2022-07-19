@@ -1,4 +1,7 @@
-import { loadFromLocalStorage, setConfig, setPuzzleId, setSaveToLocalStorage, setSolution, setUpGuesses } from '../../game/game';
+import { getDifficulty } from '../../game/difficulty';
+import { Game } from '../../game/game';
+import { Guess } from '../../game/types';
+import { Difficulty } from '../../ui/settings';
 
 const FETCH_URL = "/.netlify/functions/fetch-daily";
 
@@ -8,33 +11,51 @@ const config = {
     allowDoubleMoves: false,
 }
 
-function fetchDailyChallenge() {
-    return fetch(FETCH_URL)
-        .then(response => response.json())
+interface Response {
+    normal: {
+        id: string,
+        solution: Guess,
+      }
 }
 
-function loadRelevantPuzzle(fetchPuzzleId, fetchSolution) {
+let fetchCache: Response | null = null;
 
-    const localPuzzleId = window.localStorage.getItem(`daily_puzzleId`);
-    const localSolution = window.localStorage.getItem(`daily_solution`);
-
-    setConfig(config)
-    if (localPuzzleId && localSolution && localPuzzleId === fetchPuzzleId) {
-        loadFromLocalStorage();
-        return;
+async function fetchDailyChallenge(): Promise<Response> {
+    if (fetchCache !== null) {
+        return fetchCache;
     }
 
-    setPuzzleId(fetchPuzzleId);
-    setSolution(fetchSolution);
+    return fetch(FETCH_URL)
+        .then(response => response.json())
+        .then((response: Response) => {
+            fetchCache = response;
+            return response;
+        })
+}
+
+function loadRelevantPuzzle(response: Response) {
+
+    // switch (getDifficulty()) {
+    //     case Difficulty.EASY: 
+    //         break;
+    //     case Difficulty.MEDIUM:
+    //         break;
+    //     case Difficulty.HARD:
+    //         break;
+    // }
+
+    const fetchPuzzleId = response.normal.id;
+    const fetchSolution = response.normal.solution;
+
+    const game = new Game(config, fetchSolution, true, fetchPuzzleId);
+
+    game.start();
 
 }
 
 export function setup() {
-    setSaveToLocalStorage(true);
-    setUpGuesses(config);
-
     fetchDailyChallenge()
-        .then(response => loadRelevantPuzzle(response.normal.id, response.normal.solution));
+        .then((response: Response) => loadRelevantPuzzle(response));
 }
 
 export function init() {

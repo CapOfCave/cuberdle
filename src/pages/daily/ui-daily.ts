@@ -1,12 +1,16 @@
 import { EvaluationState } from '../../game/constants';
-import { getGameState } from '../../game/game';
+import { getCurrentGame } from '../../game/game';
 import { shareResults } from '../../game/uiOutput';
 import { createEmojiPattern } from '../../game/utils';
 
 function createShareText() {
 
-    const { puzzleId, previousEvaluations, config} = getGameState();
+    const game = getCurrentGame();
+    if (!game) return `invalid`;
 
+    const a = game.getGameState();
+    console.log(a);
+    const { puzzleId, previousEvaluations, config} = a;
     const [_difficultyId, dayId] = puzzleId!.split("-");
 
     let lastGuess = previousEvaluations[previousEvaluations.length - 1];
