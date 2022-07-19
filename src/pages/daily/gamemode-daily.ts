@@ -5,8 +5,8 @@ import { Guess } from '../../game/types';
 import { Difficulty } from '../../ui/settings';
 import { DailyGame } from './daily-game';
 
-const FETCH_URL = "http://localhost:8888/.netlify/functions/fetch-daily";
-// const FETCH_URL = "/.netlify/functions/fetch-daily";
+// const FETCH_URL = "http://localhost:8888/.netlify/functions/fetch-daily";
+const FETCH_URL = "/.netlify/functions/fetch-daily";
 
 interface ResponseGameData {
     id: string,
@@ -67,11 +67,11 @@ function loadRelevantPuzzle(response: Response) {
 function extractSolution(response: Response, difficulty: Difficulty) {
     switch (difficulty) {
         case Difficulty.EASY: 
-            return response.normal.solution.splice(0, 2);
+            return response.easy.solution
         case Difficulty.MEDIUM:
-            return response.normal.solution.splice(0, 3);
+            return response.medium.solution
         case Difficulty.HARD:
-            return response.normal.solution.splice(0, 4);
+            return response.hard.solution
     }
 }
 
