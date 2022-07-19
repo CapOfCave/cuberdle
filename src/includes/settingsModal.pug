@@ -1,0 +1,25 @@
+#settingsModal.modal-dialog
+    .modal-header
+        h5#resultTitle Settings
+        include ./closeModal.pug        
+    .settings-wrapper
+        .switch-wrapper
+            .label-with-icon
+                label(for="settingsColorblindMode") Use the Tol color palette
+            label.switch 
+                input#settingsColorblindMode(type="checkbox" name="settings-colorblind-mode")
+                span.slider.round
+        .div
+            h3 Difficulty
+            label.radio-container
+                span Easy (5 turns, no double turns)
+                input(type="radio" checked="checked" value="easy" name="settings-difficulty")
+                span.checkmark
+            label.radio-container
+                span Medium (6 turns, double turns allowed)
+                input(type="radio" checked="checked" value="medium" name="settings-difficulty")
+                span.checkmark 
+            label.radio-container
+                span Hard (7 turns, double turns allowed)
+                input(type="radio" checked="checked" value="hard" name="settings-difficulty")
+                span.checkmark

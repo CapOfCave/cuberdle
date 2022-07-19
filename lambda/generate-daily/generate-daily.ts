@@ -48,7 +48,7 @@ export const handler: Handler = async (_event, _context) => {
         const date = addDays(lastChallengeDate, i);
 
         const easy = generateScramble(5, false);
-        const normal = generateScramble(6, true);
+        const medium = generateScramble(6, true);
         const hard = generateScramble(7, true);
 
         const infiniteNoDouble = generateScramble(50, false);
@@ -56,8 +56,9 @@ export const handler: Handler = async (_event, _context) => {
 
         newChallenges.push({
             date,
+            normal: easy,
             easy,
-            normal,
+            medium,
             hard,
             infiniteDouble,
             infiniteNoDouble,
@@ -74,9 +75,6 @@ export const handler: Handler = async (_event, _context) => {
 
     return {
         statusCode: 200,
-        body: JSON.stringify({
-            count: 0
-        }),
     }
 }
 

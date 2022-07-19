@@ -7,7 +7,7 @@ export function openModal(modalId) {
     for (let modal of activeModals) {
         modal.classList.remove("active-modal");
     }
-    document.getElementById(modalId).classList.add("active-modal");
+    document.getElementById(modalId)!.classList.add("active-modal");
 }
 
 export function closeModal() {
@@ -45,6 +45,10 @@ export function showLossScreen(previousEvaluations, solution) {
 
 export function showInstructions() {
     openModal("instructionsModal")
+}
+
+export function showSettings() {
+    openModal("settingsModal")
 }
 
 export function shareResults(text) {

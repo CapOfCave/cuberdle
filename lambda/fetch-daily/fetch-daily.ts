@@ -59,9 +59,19 @@ export const handler: Handler = async (event, context) => {
     statusCode: 200,
     headers,
     body: JSON.stringify({
-      normal: {
+      id: challenges.id,
+      normal: challenges.normal && {
         id: `normal-${challenges.id}`,
         solution: challenges.normal,
+      },
+      easy: challenges.easy && {
+        solution: challenges.easy,
+      },
+      medium: challenges.medium && {
+        solution: challenges.medium,
+      },
+      hard: challenges.hard && {
+        solution: challenges.hard,
       }
     }),
   }

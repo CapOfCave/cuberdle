@@ -11,3 +11,7 @@ export interface GameConfig {
     guessLength: number;
     allowDoubleMoves: boolean;
 }
+
+declare global {
+    interface Window { actions: {[key: string]: () => void}; }
+}

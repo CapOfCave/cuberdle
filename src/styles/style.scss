@@ -110,7 +110,7 @@ body.modal-open #modal {
 	background-color: #111111;
 	margin: auto;
 	padding: 20px;
-	max-width: 600px;
+	max-width: 700px;
 	border-radius: 14px;
 	border-style: none;
 
@@ -147,6 +147,15 @@ body.modal-open #modal {
 	margin-bottom: 1rem;
 	line-height: 1.5em;
 }
+
+.instructions-body {
+	margin-bottom: 2rem;
+}
+
+.instructions-body > h3 {
+	margin-top: 2rem;
+}
+
 
 .result-pattern {
 	text-align: center;
@@ -348,4 +357,16 @@ body.modal-open #modal {
 	display: flex;
 	justify-content: center;
 	margin-top: 3rem;
+}
+
+.icon-button {
+	margin: 0 0.5rem;
+}
+
+.label-with-icon {
+	font-size: 1.2rem;
+	vertical-align: middle;
+	display: inline-flex;
+	gap: 0.5rem;
+	
 }

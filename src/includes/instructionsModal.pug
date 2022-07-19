@@ -1,0 +1,41 @@
+#instructionsModal.modal-dialog
+    .modal-header
+        h5 Instructions
+        include ./closeModal.pug  
+    .instructions-body      
+        p Turn the cube to find the turning sequence that solves the cube in the given number of moves!
+        h3 Finding the solution
+        p 
+            span All moves are tracked using 
+            a(href="https://ruwix.com/the-rubiks-cube/notation/" target="_blank" rel="noopener noreferrer") Rubik's Cube Notation
+            span . 
+        p Example:
+        div
+            .move-card.move-card-preview(data-state="present") F 
+            .move-card.move-card-preview(data-state="absent") R 
+            .move-card.move-card-preview(data-state="absent") U 
+            .move-card.move-card-preview(data-state="correct") R' 
+            .move-card.move-card-preview(data-state="absent") U' 
+        p Upon submitting, the moves are highlighted as follows:
+        .instruction-row
+            .move-card.move-card.move-card-preview-small(data-state="correct") R' 
+            span &nbsp;means that R' is the fourth move of the solve. There may or may not be additional R' moves in the final solution.
+        .instruction-row 
+            .move-card.move-card-preview-small(data-state="present") F
+            span &nbsp;means that F is found at least once in the final solution, but not at position 1.
+        .instruction-row 
+            .move-card.move-card-preview-small(data-state="absent") R
+            span &nbsp;means that R does not occur in the final solution.
+        h3 Turning the cube
+        p Click on one of the cube's stickers and drag it to the desired location to turn the cube.
+        p Click and drag the background to rotate the cube.
+        h3 Additional information
+        p Adjacent opposite moves (e. g. R and R') cancel out and won't count towards the solution. 
+        p In medium or hard mode, making the same move twice in a row (e. g. F and F) will be combined into one move (F2).
+
+        h3 Good luck and have fun!
+        p Choose a difficulty below to start. I'd recommend you start with the easiest option - you can always change it later in the settings menu.
+    .action-section
+        button.action-button.solid.primary(onclick="window.actions.chooseEasyDifficulty()") Easy
+        button.action-button.solid.primary(onclick="window.actions.chooseMediumDifficulty()") Medium
+        button.action-button.solid.primary(onclick="window.actions.chooseHardDifficulty()") Hard
