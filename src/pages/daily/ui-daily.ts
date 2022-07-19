@@ -2,10 +2,11 @@ import { EvaluationState } from '../../game/constants';
 import { getCurrentGame } from '../../game/game';
 import { shareResults } from '../../game/uiOutput';
 import { createEmojiPattern } from '../../game/utils';
+import { DailyGame } from './daily-game';
 
 function createShareText() {
 
-    const game = getCurrentGame();
+    const game = getCurrentGame() as DailyGame;
     if (!game) return `invalid`;
 
     const a = game.getGameState();

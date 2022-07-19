@@ -14,13 +14,13 @@ export function getCurrentGame(): Game | null {
 }
 
 export interface GameStateData {
-    puzzleId: string | null;
     previousEvaluations: Evaluation[];
     previousGuesses: Guess[];
     config: GameConfig;
     solution: Guess;
     gameResult: GameState;
 }
+
 export interface GameCallbacks {
     onChange?(gameState: GameStateData): void;
 }
@@ -32,20 +32,16 @@ export class Game {
     gameResult = GameState.ONGOING;
     previousGuesses: Guess[] = [];
     previousEvaluations: Evaluation[] = [];
-
-    // TODO move to daily
-    puzzleId: string | null = null;
     callbacks: GameCallbacks;
 
-
-    constructor(config: GameConfig, solution: Guess, callbacks: GameCallbacks, puzzleId: string | null = null, existingData: {gameResult: GameState, previousGuesses: Guess[], previousEvaluations: Evaluation[]} | null = null) {
+    constructor(config: GameConfig, solution: Guess, callbacks: GameCallbacks, existingData: {gameResult: GameState, previousGuesses: Guess[], previousEvaluations: Evaluation[]} | null = null) {
         this.pConfig = config;
         this.solution = solution;
         this.callbacks = callbacks;
-        this.puzzleId = puzzleId;
         
         if (existingData) {
             this.gameResult = existingData.gameResult;
+            console.log("exitss:", this.gameResult)
             this.previousGuesses = existingData.previousGuesses;
             this.previousEvaluations = existingData.previousEvaluations;
         }
@@ -59,13 +55,14 @@ export class Game {
         if (this.previousEvaluations.some(evaluation => isAllCorrect(evaluation))) {
             showWinScreen(this.previousEvaluations, this.solution);
         } else if (this.previousGuesses.length >= this.pConfig.guessCount) {
-            showLossScreen(this.previousEvaluations, this.solution)
+            showLossScreen(this.previousEvaluations, this.solution);
         } 
         // replace the 'current' instance
         currentInstance = this;
     }
 
     turn = (face, direction) => {
+        console.log(this.gameResult)
         if (this.gameResult !== GameState.ONGOING) return;
         if (isNextMoveOverflowing(face, direction, this.lastMoves, this.pConfig!)) return;
         const notation = getNotation(face, direction);
@@ -143,9 +140,8 @@ export class Game {
         [...this.solution].reverse().forEach(notation => this.revert(notation, true))
     }
 
-    getGameState = (): GameStateData => {
+    getGameState(): GameStateData {
         return {
-            puzzleId: this.puzzleId,
             previousGuesses: this.previousGuesses,
             previousEvaluations: this.previousEvaluations,
             config: this.pConfig!,
