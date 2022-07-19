@@ -99,4 +99,7 @@ export function setup() {
 
 export function init() {
     window.addEventListener('load', setup);
+    document.addEventListener('settings-changed-difficulty', ((e: CustomEvent) => {
+        setup();
+    }) as EventListener);
 }

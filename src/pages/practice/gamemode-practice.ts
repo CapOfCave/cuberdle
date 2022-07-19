@@ -26,4 +26,7 @@ export function playAgain() {
 
 export function init() {
     window.addEventListener('load', setUp);
+    document.addEventListener('settings-changed-difficulty', ((e: CustomEvent) => {
+        reset();
+    }) as EventListener);
 }
