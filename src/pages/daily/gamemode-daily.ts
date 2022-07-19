@@ -1,7 +1,5 @@
-import { getDifficulty } from '../../game/difficulty';
 import { Game } from '../../game/game';
 import { Guess } from '../../game/types';
-import { Difficulty } from '../../ui/settings';
 
 const FETCH_URL = "/.netlify/functions/fetch-daily";
 

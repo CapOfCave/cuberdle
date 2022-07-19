@@ -1,11 +1,11 @@
 import { reset as resetCube, rotate } from '../cube/cubeOutput';
 import { EvaluationState, GameState } from './constants';
+import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic';
 import { addEvaluation, addGuess, clearGuesses, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
-import { showInstructions, showLossScreen, showWinScreen } from './uiOutput';
-import { inverseDirection } from './utils';
-import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic'
-import { getNotation, getObjectFromNotation } from './notation'
+import { getNotation, getObjectFromNotation } from './notation';
 import { Evaluation, GameConfig, Guess } from './types';
+import { showLossScreen, showWinScreen } from './uiOutput';
+import { inverseDirection } from './utils';
 
 let currentInstance: Game | null = null;
 
@@ -175,19 +175,8 @@ export class Game {
     }
 }
 
-function init() {
-    window.addEventListener('load', setupInstructions);
-}
-
 function isAllCorrect(evaluations) {
     return evaluations.every(evaluation => evaluation === EvaluationState.CORRECT)
-}
-
-function setupInstructions() {
-    if (!window.localStorage.getItem('skipInstructions')) {
-        showInstructions();
-        window.localStorage.setItem('skipInstructions', "true")
-    }
 }
 
 function setUpGuesses(config: GameConfig) {
