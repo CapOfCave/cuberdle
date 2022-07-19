@@ -47,11 +47,20 @@ export const handler: Handler = async (_event, _context) => {
     for (let i = 1; i < Math.ceil(diff / 1000 / 60 / 60 / 24) + 1 + CHALLENGE_BUFFER; i++) {
         const date = addDays(lastChallengeDate, i);
 
-        const normal = generateScramble(5, false);
+        const easy = generateScramble(5, false);
+        const normal = generateScramble(6, true);
+        const hard = generateScramble(7, true);
+
+        const infiniteNoDouble = generateScramble(50, false);
+        const infiniteDouble = generateScramble(50, true);
 
         newChallenges.push({
             date,
+            easy,
             normal,
+            hard,
+            infiniteDouble,
+            infiniteNoDouble,
             id: newestChallenges!.id + i,
         })
     }
