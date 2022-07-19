@@ -1,5 +1,7 @@
+import { Difficulty, updateItem } from '../ui/settings';
 import { directionsList } from './constants';
 import { getCurrentGame } from './game';
+import { closeModal } from './uiOutput';
 
 export function undoButtonClicked() {
     getCurrentGame()?.undo();
@@ -19,3 +21,19 @@ export function randomMoveButtonClicked() {
     getCurrentGame()?.turn(Math.floor(Math.random() * 6), direction);
 }
 
+function chooseDifficulty(difficulty: Difficulty) {
+    updateItem({ difficulty });
+    closeModal();
+}
+
+export function chooseEasyDifficulty() {
+    chooseDifficulty(Difficulty.EASY);
+}
+
+export function chooseMediumDifficulty() {
+    chooseDifficulty(Difficulty.MEDIUM);
+}
+
+export function chooseHardDifficulty() {
+    chooseDifficulty(Difficulty.HARD);
+}

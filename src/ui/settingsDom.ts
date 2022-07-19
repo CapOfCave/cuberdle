@@ -1,4 +1,4 @@
-import { loadSettings, Settings, updateItem } from "./settings";
+import { loadSettings, Settings, _updateItem } from "./settings";
 
 function getRadioButtonValue(name: string): string | null {
     const selectedElement: HTMLInputElement | null = document.querySelector(`input[name="settings-${name}"]:checked`);
@@ -90,14 +90,10 @@ const settingsMetas: { [key in keyof Settings]: SettingsMeta } = {
 }
 
 function settingChanged(settingId: string, newValue: string) {
-    console.log("changed", settingId, newValue, `settings-changed-${settingId}`)
-    updateItem({ [settingId]: newValue });
-
-    const event = new CustomEvent(`settings-changed-${settingId}`, { detail: { newValue }});
-    document.dispatchEvent(event)
+    _updateItem({ [settingId]: newValue });
 }
 
-function init() {
+export function resetUi() {
     const settings = loadSettings();
     for (let [key, value] of Object.entries(settings)) {
         const meta = settingsMetas[key];
@@ -107,4 +103,4 @@ function init() {
     }
 }
 
-init();
+resetUi();

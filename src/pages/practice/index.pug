@@ -21,38 +21,7 @@ html(lang="en")
         
         //- Modals
         #modal
-            #instructionsModal.modal-dialog
-                .modal-header
-                    h5 Instructions
-                    include ../../includes/closeModal.pug        
-                p Turn the cube to find the turning sequence that solves the cube in the given number of moves!
-                p 
-                    span All moves are tracked using 
-                    a(href="https://ruwix.com/the-rubiks-cube/notation/" target="_blank" rel="noopener noreferrer") Rubik's Cube Notation
-                    span . 
-                p Example:
-                div
-                    .move-card.move-card-preview(data-state="present") F 
-                    .move-card.move-card-preview(data-state="absent") R 
-                    .move-card.move-card-preview(data-state="absent") U 
-                    .move-card.move-card-preview(data-state="correct") R' 
-                    .move-card.move-card-preview(data-state="absent") U' 
-                p Upon submitting, the moves are highlighted as follows:
-                .instruction-row
-                    .move-card.move-card.move-card-preview-small(data-state="correct") R' 
-                    span &nbsp;means that R' is the fourth move of the solve. There may or may not be additional R' moves in the final solution.
-                .instruction-row 
-                    .move-card.move-card-preview-small(data-state="present") F
-                    span &nbsp;means that F is found at least once in the final solution, but not at position 1.
-                .instruction-row 
-                    .move-card.move-card-preview-small(data-state="absent") R
-                    span &nbsp;means that R does not occur in the final solution.
-                p Adjacent opposite moves (e. g. R and R') cancel out and won't count towards the solution. 
-                //- p In hard or expert mode, making the same move twice in a row (e. g. F and F) will be combined into one move (F2).
-                p Good luck and have fun!
-                .action-section
-                    button.action-button.solid.primary(onclick="window.actions.closeModal()") Normal Mode
-                    button.action-button.solid.primary(disabled) Hard Mode (coming soon)
+            include ../../includes/instructionsModal.pug
             #winModal.results-modal.modal-dialog
                 .modal-header
                     h5#resultTitle You won!

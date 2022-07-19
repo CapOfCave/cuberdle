@@ -6,7 +6,7 @@ import { init as outputInit } from '../../cube/cubeOutput';
 import { init as initGame } from './gamemode-daily';
 import { init as instructionsInit } from '../../game/instructions';
 
-import { clearButtonClicked, randomMoveButtonClicked, submitButtonClicked, undoButtonClicked } from '../../game/uiInput';
+import { clearButtonClicked, randomMoveButtonClicked, submitButtonClicked, undoButtonClicked, chooseEasyDifficulty, chooseMediumDifficulty, chooseHardDifficulty } from '../../game/uiInput';
 import { closeModal, showInstructions, showSettings } from '../../game/uiOutput';
 import { shareButtonClicked } from './ui-daily';
 
@@ -27,4 +27,7 @@ window.actions = {
     showInstructions,
     showSettings,
     shareButtonClicked,
+    chooseEasyDifficulty,
+    chooseMediumDifficulty,
+    chooseHardDifficulty,
 }
