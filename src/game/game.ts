@@ -138,7 +138,7 @@ export class Game {
      */
     clearCube = () => {
         while (this.lastMoves.length > 0) {
-            this.revert(this.lastMoves.pop())
+            this.revert(this.lastMoves.pop(), true)
         }
         this.notifyChanged();
     }
