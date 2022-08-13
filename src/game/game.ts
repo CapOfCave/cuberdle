@@ -1,6 +1,6 @@
 import { reset as resetCube, rotate } from '../cube2/cubeOutput';
 import { Difficulty } from '../ui/settings';
-import { EvaluationState, GameState } from './constants';
+import { Direction, EvaluationState, GameState } from './constants';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic';
 import { addEvaluation, addGuess, fixateFinalGuess, moveToNextGuess, removeGuess, setGuessesAndEvaluation } from './moveOutput';
 import { getNotation, getObjectFromNotation } from './notation';
@@ -70,6 +70,26 @@ export class Game {
         if (isNextMoveOverflowing(face, direction, this.lastMoves, this.config!)) return;
         const notation = getNotation(face, direction);
         rotate(face, direction);
+        const addMoveResponse = addMoveToStack(notation, this.lastMoves, this.config!.allowDoubleMoves);
+        switch (addMoveResponse.status) {
+            case "appended":
+                addGuess(this.lastMoves.length - 1, addMoveResponse.notation);
+                break;
+            case "modified":
+                addGuess(this.lastMoves.length - 1, addMoveResponse.notation);
+                break;
+            case "removed":
+                removeGuess(this.lastMoves.length);
+        }
+        this.notifyChanged();
+    }
+
+    turned = (face: number, direction: Direction) => {
+        console.log("turned");
+        if (this.gameResult !== GameState.ONGOING) throw new Error(`Turning should have been prevented, game result is ${this.gameResult}`);
+        if (isNextMoveOverflowing(face, direction, this.lastMoves, this.config!)) throw new Error(`Turning should have been prevented, next move overflows`);
+        const notation = getNotation(face, direction);
+        // rotate(face, direction);
         const addMoveResponse = addMoveToStack(notation, this.lastMoves, this.config!.allowDoubleMoves);
         switch (addMoveResponse.status) {
             case "appended":
