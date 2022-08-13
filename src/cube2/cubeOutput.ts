@@ -3,6 +3,7 @@ import './cuber'
 import './cuber.css'
 import './globalCube'
 import { getCurrentGame } from '../game/game';
+import { init as colorModeInit} from '../cube/colorMode';
 
 export function rotate(face: number, direction: Direction, skipAnimation = false) {
     const ernoFace = faceNames[face];
@@ -58,6 +59,7 @@ function onTwistComlete (e) {
 }
 
 export function init() {
+    colorModeInit();
     window.addEventListener("load", () => {
         globalThis.cube = new globalThis.ERNO.Cube({
             hideInvisibleFaces: true,

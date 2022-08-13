@@ -1,4 +1,23 @@
-    /************/
+body {
+	--cube-color-blue: #001ca8;
+	--cube-color-green: #006E16;
+	--cube-color-white: #DDD;
+	--cube-color-yellow: #E0AE00;
+	--cube-color-orange: #FF5000;
+	--cube-color-red: #DF0500;
+}
+
+body.colorblind {
+	--cube-color-blue: #332288;
+	--cube-color-green: #117733;
+	--cube-color-white: #DDD;
+	--cube-color-yellow: #DDCC77;
+	--cube-color-orange: #CC6677;
+	--cube-color-red: #882255;
+}
+
+
+	/************/
    /*          */
   /*   Cube   */
  /*          */
@@ -133,12 +152,12 @@
 
 */
 .purty .face { opacity: 0.5; }
-.purty .face.faceFront { background-color: #FFF; }
-.purty .face.faceUp    { background-color: #E87000; }
-.purty .face.faceRight { background-color: #3D81F6; }
-.purty .face.faceDown  { background-color: #DC422F; }
-.purty .face.faceLeft  { background-color: #009D54; }
-.purty .face.faceBack  { background-color: #F5B400; }
+.purty .face.faceFront { background-color: var(--cube-color-white); }
+.purty .face.faceUp    { background-color:  var(--cube-color-orange); }
+.purty .face.faceRight { background-color:  var(--cube-color-blue); }
+.purty .face.faceDown  { background-color:  var(--cube-color-red); }
+.purty .face.faceLeft  { background-color:  var(--cube-color-green); }
+.purty .face.faceBack  { background-color:  var(--cube-color-yellow); }
 /*.purty .face.faceFront { background-color: #CCC; }
 .purty .face.faceUp    { background-color: #C30; }
 .purty .face.faceRight { background-color: #00A; }
@@ -202,12 +221,12 @@
 }
 
 
-.cube .sticker.red 		{ background: #DC422F;	}
-.cube .sticker.white 	{ background: #F3F3F3;	}
-.cube .sticker.blue 	{ background: #3D81F6; 	}
-.cube .sticker.green 	{ background: #009D54;	}
-.cube .sticker.orange 	{ background: #E87000; 	}
-.cube .sticker.yellow 	{ background: #F5B400; 	}
+.cube .sticker.red 		{ background:  var(--cube-color-red);	}
+.cube .sticker.white 	{ background:  var(--cube-color-white);	}
+.cube .sticker.blue 	{ background:  var(--cube-color-blue); 	}
+.cube .sticker.green 	{ background:  var(--cube-color-green);	}
+.cube .sticker.orange 	{ background:  var(--cube-color-orange); 	}
+.cube .sticker.yellow 	{ background:  var(--cube-color-yellow); 	}
 
 .cube .sticker.stickerLogo {
 
