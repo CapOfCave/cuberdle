@@ -6,6 +6,8 @@ import { init as colorModeInit} from './colorMode';
 // this code was written by a wizard
 // I am trying to make sense of it
 
+console.log("NOOOOOOO")
+
 /**
  * FACE INDEX MAPPING
  *  0: left

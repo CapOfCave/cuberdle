@@ -1,8 +1,8 @@
 import '../../styles/styles'
 import '../../ui/settingsDom'
 
-import { init as inputInit } from '../../cube/cubeInput';
-import { init as outputInit } from '../../cube/cubeOutput';
+import { init as inputInit } from '../../cube2/cubeInput';
+import { init as outputInit } from '../../cube2/cubeOutput';
 import { init as initGame } from './gamemode-daily';
 import { init as instructionsInit } from '../../game/instructions';
 

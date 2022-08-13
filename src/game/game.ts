@@ -1,4 +1,4 @@
-import { reset as resetCube, rotate } from '../cube/cubeOutput';
+import { reset as resetCube, rotate } from '../cube2/cubeOutput';
 import { Difficulty } from '../ui/settings';
 import { EvaluationState, GameState } from './constants';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic';

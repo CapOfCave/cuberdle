@@ -87,6 +87,10 @@ button {
 	padding-bottom: 3rem;
 }
 
+.preview {
+	min-height: 50vh;
+}
+
 body.modal-open #modal {
 	display: block;
 }
