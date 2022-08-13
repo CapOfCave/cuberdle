@@ -7815,10 +7815,11 @@ ERNO.Queue.prototype.redo = function(){
 
 
 
-ERNO.Twist = function( command, degrees, programmatically = false ){
+ERNO.Twist = function( command, degrees, programmatically = false, skipAnimation = false ){
 
 	if( command ) this.set( command, degrees )
 	this.programmatically = programmatically;
+	this.skipAnimation = skipAnimation;
 
 }
 
@@ -11681,7 +11682,7 @@ ERNO.extend( ERNO.Cube.prototype, {
 		var slice 	 = this.slicesDictionary[ twist.command.toLowerCase() ],
 			rotation = ( twist.degrees === undefined ? 90 : twist.degrees ) * twist.vector,
 			radians  = rotation.degreesToRadians(),
-			duration = Math.abs( radians - slice.rotation ) / ( Math.PI * 0.5 ) * this.twistDuration;
+			duration = twist.skipAnimation ? 0 : Math.abs( radians - slice.rotation ) / ( Math.PI * 0.5 ) * this.twistDuration;
 
 
 		if (!slice.face) {

@@ -4,13 +4,13 @@ import './cuber.css'
 import './globalCube'
 import { getCurrentGame } from '../game/game';
 
-export function rotate(face: number, direction: Direction, _?) {
+export function rotate(face: number, direction: Direction, skipAnimation = false) {
     const ernoFace = faceNames[face];
     let twist;
     switch(direction) {
-        case Direction.CLOCKWISE: twist = new globalThis.ERNO.Twist(ernoFace.toUpperCase(), undefined,  true); break;
-        case Direction.ANTI_CLOCKWISE: twist = new globalThis.ERNO.Twist(ernoFace.toLowerCase(), undefined, true); break;
-        case Direction.DOUBLE_MOVE: twist = new globalThis.ERNO.Twist(ernoFace, 180, true); break;
+        case Direction.CLOCKWISE: twist = new globalThis.ERNO.Twist(ernoFace.toUpperCase(), undefined, true, skipAnimation); break;
+        case Direction.ANTI_CLOCKWISE: twist = new globalThis.ERNO.Twist(ernoFace.toLowerCase(), undefined, true, skipAnimation); break;
+        case Direction.DOUBLE_MOVE: twist = new globalThis.ERNO.Twist(ernoFace, 180, true, skipAnimation); break;
     }
     cube.twist(twist)
 }
