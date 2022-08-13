@@ -9999,8 +9999,8 @@ ERNO.Interaction = (function(){
 
 				}
 
-				
-				if( slice ) slice.rotation = angle;
+				// only allow turning faces
+				if( slice && slice.face) slice.rotation = angle;
 
 
 			}
@@ -11684,6 +11684,18 @@ ERNO.extend( ERNO.Cube.prototype, {
 			duration = Math.abs( radians - slice.rotation ) / ( Math.PI * 0.5 ) * this.twistDuration;
 
 
+		if (!slice.face) {
+			if( this.verbosity >= 0.7 ){
+				
+				console.log(
+					'Ignored the twist to rotate '+
+					twist.group +' '+ twist.wise +' by',
+					twist.degrees, 'degrees since it was not a face move.'
+					)
+				}
+			// ignore any non-face moves
+			return;
+		}
 
 		var l = slice.indices.length,
 			cubelet;
