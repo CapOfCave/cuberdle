@@ -8168,7 +8168,7 @@ ERNO.Cubelet = function( cube, id, colors ){
 	//  Here's our overhead for that:
 
 	var extrovertedFaces = 0;
-	if( colors === undefined ) colors = [ W, O,  ,  , G, ];
+	if( colors === undefined ) colors = [ 1, 1,  ,  , 1, ];
 	this.faces = [];
 
 
@@ -8185,7 +8185,7 @@ ERNO.Cubelet = function( cube, id, colors ){
 		// (This is based on our above positions and rotations map.)
 
 		var
-		color  = colors[ i ] || ERNO.COLORLESS;
+		color  = colors[ i ] ? [G, W, R, Y, O, B][i] : ERNO.COLORLESS;
 		
 
 		//  Each face is an object and keeps track of its original ID number
@@ -11208,23 +11208,23 @@ ERNO.Cube = function( parameters ){
 
 		//  Front slice
 
-		[ W, O,  ,  , G,   ],    [ W, O,  ,  ,  ,   ],    [ W, O, B,  ,  ,   ],//   0,  1,  2
-		[ W,  ,  ,  , G,   ],    [ W,  ,  ,  ,  ,   ],    [ W,  , B,  ,  ,   ],//   3,  4,  5
-		[ W,  ,  , R, G,   ],    [ W,  ,  , R,  ,   ],    [ W,  , B, R,  ,   ],//   6,  7,  8
+		[ 1, 1,  ,  , 1,   ],    [ 1, 1,  ,  ,  ,   ],    [ 1, 1, 1,  ,  ,   ],//   0,  1,  2
+		[ 1,  ,  ,  , 1,   ],    [ 1,  ,  ,  ,  ,   ],    [ 1,  , 1,  ,  ,   ],//   3,  4,  5
+		[ 1,  ,  , 1, 1,   ],    [ 1,  ,  , 1,  ,   ],    [ 1,  , 1, 1,  ,   ],//   6,  7,  8
 
 
 		//  Standing slice
 
-		[  , O,  ,  , G,   ],    [  , O,  ,  ,  ,   ],    [  , O, B,  ,  ,   ],//   9, 10, 11
-		[  ,  ,  ,  , G,   ],    [  ,  ,  ,  ,  ,   ],    [  ,  , B,  ,  ,   ],//  12, XX, 14
-		[  ,  ,  , R, G,   ],    [  ,  ,  , R,  ,   ],    [  ,  , B, R,  ,   ],//  15, 16, 17
+		[  , 1,  ,  , 1,   ],    [  , 1,  ,  ,  ,   ],    [  , 1, 1,  ,  ,   ],//   9, 10, 11
+		[  ,  ,  ,  , 1,   ],    [  ,  ,  ,  ,  ,   ],    [  ,  , 1,  ,  ,   ],//  12, XX, 14
+		[  ,  ,  , 1, 1,   ],    [  ,  ,  , 1,  ,   ],    [  ,  , 1, 1,  ,   ],//  15, 16, 17
 
 
 		//  Back slice
 
-		[  , O,  ,  , G, Y ],    [  , O,  ,  ,  , Y ],    [  , O, B,  ,  , Y ],//  18, 19, 20
-		[  ,  ,  ,  , G, Y ],    [  ,  ,  ,  ,  , Y ],    [  ,  , B,  ,  , Y ],//  21, 22, 23
-		[  ,  ,  , R, G, Y ],    [  ,  ,  , R,  , Y ],    [  ,  , B, R,  , Y ] //  24, 25, 26
+		[  , 1,  ,  , 1, 1 ],    [  , 1,  ,  ,  , 1 ],    [  , 1, 1,  ,  , 1 ],//  18, 19, 20
+		[  ,  ,  ,  , 1, 1 ],    [  ,  ,  ,  ,  , 1 ],    [  ,  , 1,  ,  , 1 ],//  21, 22, 23
+		[  ,  ,  , 1, 1, 1 ],    [  ,  ,  , 1,  , 1 ],    [  ,  , 1, 1,  , 1 ] //  24, 25, 26
 
 	]).forEach( function( cubeletColorMap, cubeletId ){
 
