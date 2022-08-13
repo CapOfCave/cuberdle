@@ -7,7 +7,6 @@ import { getCurrentGame } from '../game/game';
 export function rotate(face: number, direction: Direction, _?) {
     const ernoFace = faceNames[face];
     let twist;
-    console.log("rotate", direction)
     switch(direction) {
         case Direction.CLOCKWISE: twist = new globalThis.ERNO.Twist(ernoFace.toUpperCase(), undefined,  true); break;
         case Direction.ANTI_CLOCKWISE: twist = new globalThis.ERNO.Twist(ernoFace.toLowerCase(), undefined, true); break;
@@ -22,7 +21,8 @@ export function reset() {
 
 
 function getSteps(twist) {
-    const degreesDirectionalized = twist.wise === "clockwise" ? twist.degrees : -twist.degrees
+    const degrees = twist.degrees ?? 90;
+    const degreesDirectionalized = twist.wise === "clockwise" ? degrees : -degrees
     const degreesNormalized = ((degreesDirectionalized % 360) + 360) % 360;
     const clockwiseSteps = Math.round(degreesNormalized / 90);
 
@@ -42,20 +42,17 @@ function getDirection(steps: number): Direction {
 function onTwistComlete (e) {
     const twist = e.detail.twist;
     if (twist.programmatically) {
-        console.log("programmatic twist:", twist);
         return;
     }
 
     const steps = getSteps(twist);
     if (steps == 0) {
-        console.log("not a turn!");
         return;
     }
     const direction = getDirection(steps);
     const face = faceNames.indexOf(twist.command.toUpperCase());
     
 
-    //mx(faceIndex, Number(anchorIndex) + 1 + 2 * clockwisePossible), clockwisePossible ? Direction.CLOCKWISE : Direction.ANTI_CLOCKWISE
     getCurrentGame()?.turned(face, direction);
 
 }
