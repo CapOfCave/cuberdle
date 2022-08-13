@@ -1,4 +1,4 @@
-import { reset as resetCube, rotate } from '../cube2/cubeOutput';
+import { reset as resetCube, rotate, setPaused } from '../cube2/cubeOutput';
 import { Difficulty } from '../ui/settings';
 import { Direction, EvaluationState, GameState } from './constants';
 import { addMoveToStack, evaluateGuess, isNextMoveOverflowing } from './gameLogic';
@@ -63,8 +63,10 @@ export class Game {
         } 
         // replace the 'current' instance
         currentInstance = this;
+        setPaused(false);
     }
 
+    // deprecated, for removal
     turn = (face, direction) => {
         if (this.gameResult !== GameState.ONGOING) return;
         if (isNextMoveOverflowing(face, direction, this.lastMoves, this.config!)) return;
@@ -89,7 +91,6 @@ export class Game {
         if (this.gameResult !== GameState.ONGOING) throw new Error(`Turning should have been prevented, game result is ${this.gameResult}`);
         if (isNextMoveOverflowing(face, direction, this.lastMoves, this.config!)) throw new Error(`Turning should have been prevented, next move overflows`);
         const notation = getNotation(face, direction);
-        // rotate(face, direction);
         const addMoveResponse = addMoveToStack(notation, this.lastMoves, this.config!.allowDoubleMoves);
         switch (addMoveResponse.status) {
             case "appended":
@@ -101,7 +102,12 @@ export class Game {
             case "removed":
                 removeGuess(this.lastMoves.length);
         }
+        this.updatePaused();
         this.notifyChanged();
+    }
+
+    updatePaused = () => {
+        setPaused(this.lastMoves.length >= this.config.guessLength);
     }
 
     revert = (moveNotation, skipAnimation = false) => {
@@ -116,6 +122,7 @@ export class Game {
         const lastMoveNotation = this.lastMoves.pop();
         this.revert(lastMoveNotation, skipAnimation);
         removeGuess(this.lastMoves.length);
+        this.updatePaused();
         if (notify) this.notifyChanged();
     }
 
@@ -146,15 +153,18 @@ export class Game {
             fixateFinalGuess();
             this.lastMoves = []
             this.gameResult = GameState.WIN;
+            setPaused(true);
             showWinScreen(this.previousEvaluations, this.solution);
         } else if (this.previousGuesses.length >= this.config.guessCount) {
             fixateFinalGuess();
             this.lastMoves = []
             this.gameResult = GameState.LOSS;
+            setPaused(true);
             showLossScreen(this.previousEvaluations, this.solution)
         } else {
             moveToNextGuess();
             this.clearCube()
+            setPaused(false);
         }
         this.notifyChanged();
     }

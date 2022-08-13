@@ -61,10 +61,15 @@ export function init() {
     window.addEventListener("load", () => {
         globalThis.cube = new globalThis.ERNO.Cube({
             hideInvisibleFaces: true,
+            paused: true
         });
     
         var container = document.getElementById( 'preview' );
         container!.appendChild( globalThis.cube.domElement );
         globalThis.cube.addEventListener("onTwistComplete", onTwistComlete);
     })
+}
+
+export function setPaused(paused) {
+    cube.paused = paused;
 }
